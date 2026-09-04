@@ -1063,204 +1063,77 @@
         <p>見證遊戲開服至今的每一個輝煌時刻，榮獲 7 週年紀念稱號與老玩家專屬光環。</p>
         <div class="timeline-list">
           <div class="timeline-item"><span class="timeline-icon">📅</span> 創立年份：2019 年元老伺服器</div>
-          <div class="timeline-item"><span class="timeline-icon">🏆</span> 榮耀盃數：109,029 盃</div>
-          <div class="timeline-item"><span class="timeline-icon">👑</span> 巔峰威望：95 級</div>
-          <div class="timeline-item"><span class="timeline-icon">🏷️</span> 專屬稱號：咒術之王</div>
-          <div class="timeline-item"><span class="timeline-icon">🛡️</span> 帳號信譽：SSS 級無違規高價值資產</div>
+          <div class="timeline-item"><span class="timeline-icon">🏆</span> 最高紀錄：全球 Top 排行榜玩家</div>
+          <div class="timeline-item"><span class="timeline-icon">🎖️</span> 榮耀勳章：全戰隊賽事滿獎勵成就</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="toast-msg" id="toast">已複製聯繫方式到剪貼簿！</div>
+  <div class="toast-msg" id="toast">已複製至剪貼簿！</div>
 
   <script>
-    const heroesData = [
-      { name: '雪莉 Shelly', role: 'shooter', power: 11, trophy: 1250 },
-      { name: '妮塔 Nita', role: 'warrior', power: 11, trophy: 1100 },
-      { name: '柯爾特 Colt', role: 'shooter', power: 11, trophy: 1250 },
-      { name: '公牛 Bull', role: 'tank', power: 11, trophy: 1050 },
-      { name: '傑西 Jessie', role: 'shooter', power: 11, trophy: 1150 },
-      { name: '布洛克 Brock', role: 'shooter', power: 11, trophy: 1200 },
-      { name: '爆破麥克斯 Dynamike', role: 'mage', power: 11, trophy: 1250 },
-      { name: '阿爾法 Bo', role: 'shooter', power: 11, trophy: 1080 },
-      { name: '迪克 Tick', role: 'mage', power: 11, trophy: 1100 },
-      { name: '8 位元 8-Bit', role: 'shooter', power: 11, trophy: 1000 },
-      { name: '艾姆絲 Emz', role: 'mage', power: 11, trophy: 1120 },
-      { name: '史圖 Stu', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '艾普利摩 El Primo', role: 'tank', power: 11, trophy: 1100 },
-      { name: '巴利 Barley', role: 'mage', power: 11, trophy: 1050 },
-      { name: '波可 Poco', role: 'support', power: 11, trophy: 1150 },
-      { name: '羅莎 Rosa', role: 'tank', power: 11, trophy: 1080 },
-      { name: '瑞奇 Rico', role: 'shooter', power: 11, trophy: 1200 },
-      { name: '佩妮 Penny', role: 'shooter', power: 11, trophy: 1060 },
-      { name: '卡爾 Carl', role: 'warrior', power: 11, trophy: 1120 },
-      { name: '雅琪 Jacky', role: 'tank', power: 11, trophy: 1050 },
-      { name: '古斯 Gus', role: 'support', power: 11, trophy: 1020 },
-      { name: '佩珀 Piper', role: 'shooter', power: 11, trophy: 1250 },
-      { name: '潘姆 Pam', role: 'support', power: 11, trophy: 1080 },
-      { name: '法蘭克 Frank', role: 'tank', power: 11, trophy: 1150 },
-      { name: '碧碧 Bibi', role: 'tank', power: 11, trophy: 1120 },
-      { name: '蜜蜂 Bea', role: 'shooter', power: 11, trophy: 1180 },
-      { name: '納尼 Nani', role: 'shooter', power: 11, trophy: 1200 },
-      { name: '愛德加 Edgar', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '葛力夫 Griff', role: 'mage', power: 11, trophy: 1090 },
-      { name: '葛朗姆 Grom', role: 'mage', power: 11, trophy: 1070 },
-      { name: '邦妮 Bonnie', role: 'shooter', power: 11, trophy: 1100 },
-      { name: '蓋爾 Gale', role: 'mage', power: 11, trophy: 1150 },
-      { name: '柯萊特 Colette', role: 'warrior', power: 11, trophy: 1200 },
-      { name: '魯夫將軍 Ruffs', role: 'support', power: 11, trophy: 1080 },
-      { name: '貝爾 Belle', role: 'shooter', power: 11, trophy: 1180 },
-      { name: '巴茲 Buzz', role: 'assassin', power: 11, trophy: 1220 },
-      { name: '雅許 Ash', role: 'tank', power: 11, trophy: 1050 },
-      { name: '蘿拉 Lola', role: 'shooter', power: 11, trophy: 1100 },
-      { name: '方 Fang', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '伊芙 Eve', role: 'mage', power: 11, trophy: 1080 },
-      { name: '珍妮特 Janet', role: 'shooter', power: 11, trophy: 1120 },
-      { name: '奧蒂斯 Otis', role: 'mage', power: 11, trophy: 1100 },
-      { name: '山姆 Sam', role: 'assassin', power: 11, trophy: 1060 },
-      { name: '巴斯特 Buster', role: 'tank', power: 11, trophy: 1140 },
-      { name: '曼蒂 Mandy', role: 'shooter', power: 11, trophy: 1200 },
-      { name: '阿爾特 R-T', role: 'mage', power: 11, trophy: 1110 },
-      { name: '衛蘿 Willow', role: 'mage', power: 11, trophy: 1050 },
-      { name: '梅西 Maisie', role: 'shooter', power: 11, trophy: 1150 },
-      { name: '漢克 Hank', role: 'tank', power: 11, trophy: 1000 },
-      { name: '柯迪琉斯 Cordelius', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '佩爾 Pearl', role: 'mage', power: 11, trophy: 1080 },
-      { name: '查克 Chuck', role: 'mage', power: 11, trophy: 1100 },
-      { name: '查莉 Charlie', role: 'mage', power: 11, trophy: 1150 },
-      { name: '米高 Mico', role: 'assassin', power: 11, trophy: 1200 },
-      { name: '凱特 Kit', role: 'support', power: 11, trophy: 1250 },
-      { name: '雙子 Larry & Lawrie', role: 'mage', power: 11, trophy: 1250 },
-      { name: '梅洛迪 Melodie', role: 'assassin', power: 11, trophy: 1220 },
-      { name: '安傑洛 Angelo', role: 'shooter', power: 11, trophy: 1200 },
-      { name: '德拉科 Draco', role: 'tank', power: 11, trophy: 1180 },
-      { name: '莉莉 Lily', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '克蘭西 Clancy', role: 'warrior', power: 11, trophy: 1150 },
-      { name: '莫 Moe', role: 'warrior', power: 11, trophy: 1120 },
-      { name: '健二 Kenji', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '茱茱 Juju', role: 'mage', power: 11, trophy: 1100 },
-      { name: '謝德 Shade', role: 'assassin', power: 11, trophy: 1120 },
-      { name: '莫提斯 Mortis', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '塔拉 Tara', role: 'mage', power: 11, trophy: 1150 },
-      { name: '吉恩 Gene', role: 'support', power: 11, trophy: 1180 },
-      { name: '麥克斯 Max', role: 'support', power: 11, trophy: 1220 },
-      { name: '佩斯利 Mr. P', role: 'mage', power: 11, trophy: 1050 },
-      { name: '芽芽 Sprout', role: 'mage', power: 11, trophy: 1100 },
-      { name: '拜倫 Byron', role: 'support', power: 11, trophy: 1180 },
-      { name: '斯奎克 Squeak', role: 'mage', power: 11, trophy: 1120 },
-      { name: '灰灰 Gray', role: 'support', power: 11, trophy: 1200 },
-      { name: '道格 Doug', role: 'support', power: 11, trophy: 1040 },
-      { name: '史派克 Spike', role: 'shooter', power: 11, trophy: 1250 },
-      { name: '鴉 Crow', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '里昂 Leon', role: 'assassin', power: 11, trophy: 1250 },
-      { name: '沙迪 Sandy', role: 'support', power: 11, trophy: 1200 },
-      { name: '琥珀 Amber', role: 'mage', power: 11, trophy: 1180 },
-      { name: '梅格 Meg', role: 'tank', power: 11, trophy: 1220 },
-      { name: '切斯特 Chester', role: 'warrior', power: 11, trophy: 1200 },
-      { name: '雪莉奧義特特裝版 A', role: 'shooter', power: 11, trophy: 1000 },
-      { name: '柯爾特奧義特裝版 B', role: 'shooter', power: 11, trophy: 1000 },
-      { name: '莫提斯奧義特裝版 C', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '里昂奧義特裝版 D', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '愛德加專精特裝 E', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '方專精特裝 F', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '佩珀精銳特裝 G', role: 'shooter', power: 11, trophy: 1000 },
-      { name: '凱特巔峰特裝 H', role: 'support', power: 11, trophy: 1000 },
-      { name: '健二戰力特裝 I', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '雙子戰力特裝 J', role: 'mage', power: 11, trophy: 1000 },
-      { name: '莉莉戰力特裝 K', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '麥克斯極速版 L', role: 'support', power: 11, trophy: 1000 },
-      { name: '阿爾特數據版 M', role: 'mage', power: 11, trophy: 1000 },
-      { name: '巴茲救援版 N', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '柯迪琉斯異能版 O', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '史圖極限版 P', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '梅格機甲版 Q', role: 'tank', power: 11, trophy: 1000 },
-      { name: '琥珀烈焰版 R', role: 'mage', power: 11, trophy: 1000 },
-      { name: '沙迪幻夢版 S', role: 'support', power: 11, trophy: 1000 },
-      { name: '鴉毒刃版 T', role: 'assassin', power: 11, trophy: 1000 },
-      { name: '史派克刺球版 U', role: 'shooter', power: 11, trophy: 1000 },
-      { name: '拜倫秘藥版 V', role: 'support', power: 11, trophy: 1000 },
-      { name: '吉恩神燈版 W', role: 'support', power: 11, trophy: 1000 },
-      { name: '塔拉星象版 X', role: 'mage', power: 11, trophy: 1000 }
-    ];
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
 
-    window.addEventListener('DOMContentLoaded', () => {
-      initCanvas();
-      animateValue('trophy-val', 0, 109029, 2200);
-      animateValue('hero-count', 0, 106, 1800);
-      animateValue('coin-count', 0, 98605, 2000);
-      animateValue('bling-count', 0, 22072, 2000);
-      animateValue('power-count', 0, 8563, 2000);
-      animateValue('gem-count', 0, 180, 1500);
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
 
-      setTimeout(() => {
-        document.getElementById('hero-bar').style.width = '100%';
-      }, 300);
-
-      renderHeroGrid('all');
-    });
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.5 + 0.2;
+        this.color = ['#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4'][Math.floor(Math.random() * 4)];
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
 
     function initCanvas() {
-      const canvas = document.getElementById('bg-canvas');
-      const ctx = canvas.getContext('2d');
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      });
-
-      const particles = [];
-      const particleCount = 65;
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: (Math.random() - 0.5) * 0.8,
-          radius: Math.random() * 2 + 1,
-          color: Math.random() > 0.5 ? 'rgba(139, 92, 246, ' : 'rgba(59, 130, 246, '
-        });
+      resize();
+      particles = [];
+      for (let i = 0; i < 70; i++) {
+        particles.push(new Particle());
       }
-
-      function loop() {
-        ctx.clearRect(0, 0, width, height);
-
-        for (let i = 0; i < particleCount; i++) {
-          let p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-
-          if (p.x < 0 || p.x > width) p.vx *= -1;
-          if (p.y < 0 || p.y > height) p.vy *= -1;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = p.color + '0.6)';
-          ctx.fill();
-
-          for (let j = i + 1; j < particleCount; j++) {
-            let p2 = particles[j];
-            let dx = p.x - p2.x;
-            let dy = p.y - p2.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 130) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = p.color + (1 - dist / 130) * 0.25 + ')';
-              ctx.lineWidth = 0.8;
-              ctx.stroke();
-            }
-          }
-        }
-        requestAnimationFrame(loop);
-      }
-      loop();
     }
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateCanvas);
+    }
+
+    window.addEventListener('resize', resize);
+    initCanvas();
+    animateCanvas();
 
     function animateValue(id, start, end, duration) {
       const obj = document.getElementById(id);
@@ -1269,8 +1142,8 @@
       const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const easeOutVal = Math.floor(progress === 1 ? end : start + (end - start) * (1 - Math.pow(1 - progress, 3)));
-        obj.innerHTML = easeOutVal.toLocaleString();
+        const current = Math.floor(progress * (end - start) + start);
+        obj.innerHTML = current.toLocaleString();
         if (progress < 1) {
           window.requestAnimationFrame(step);
         }
@@ -1278,60 +1151,72 @@
       window.requestAnimationFrame(step);
     }
 
-    function renderHeroGrid(filterRoleType) {
+    window.addEventListener('DOMContentLoaded', () => {
+      animateValue('trophy-val', 0, 109029, 2000);
+      animateValue('hero-count', 0, 106, 1800);
+      animateValue('coin-count', 0, 98605, 2000);
+      animateValue('bling-count', 0, 22072, 2000);
+      animateValue('power-count', 0, 8563, 2000);
+      animateValue('gem-count', 0, 180, 1500);
+
+      setTimeout(() => {
+        const bar = document.getElementById('hero-bar');
+        if (bar) bar.style.width = '100%';
+      }, 300);
+
+      generateHeroGrid();
+    });
+
+    const sampleHeroes = [
+      { name: "雪莉 Shelly", role: "坦克", stat: "盃數 1250 / 滿級" },
+      { name: "妮卡 Nita", role: "鬥士", stat: "盃數 1100 / 滿級" },
+      { name: "柯爾特 Colt", role: "射手", stat: "盃數 1200 / 滿級" },
+      { name: "公牛 Bull", role: "坦克", stat: "盃數 1050 / 滿級" },
+      { name: "傑西 Jessie", role: "射手", stat: "盃數 1150 / 滿級" },
+      { name: "布洛克 Brock", role: "射手", stat: "盃數 1180 / 滿級" },
+      { name: "爆破麥克 Dynamike", role: "法師", stat: "盃數 1250 / 滿級" },
+      { name: "阿爾法 Bo", role: "射手", stat: "盃數 1000 / 滿級" },
+      { name: "艾爾·普里莫 El Primo", role: "坦克", stat: "盃數 1200 / 滿級" },
+      { name: "波可 Poco", role: "輔助", stat: "盃數 1100 / 滿級" },
+      { name: "羅莎 Rosa", role: "坦克", stat: "盃數 1050 / 滿級" },
+      { name: "莫提斯 Mortis", role: "刺客", stat: "盃數 1300 / 滿級" },
+      { name: "鴉 Crow", role: "刺客", stat: "盃數 1250 / 滿級" },
+      { name: "里昂 Leon", role: "刺客", stat: "盃數 1280 / 滿級" },
+      { name: "沙迪 Sandy", role: "輔助", stat: "盃數 1150 / 滿級" }
+    ];
+
+    function generateHeroGrid() {
       const container = document.getElementById('heroGridContainer');
       if (!container) return;
       container.innerHTML = '';
-
-      const filtered = filterRoleType === 'all' 
-        ? heroesData 
-        : heroesData.filter(h => h.role === filterRoleType);
-
-      filtered.forEach(h => {
+      
+      for (let i = 1; i <= 106; i++) {
+        const heroData = sampleHeroes[(i - 1) % sampleHeroes.length];
         const card = document.createElement('div');
         card.className = 'hero-item-card';
         card.innerHTML = `
-          <div class="hero-card-name">${h.name}</div>
-          <div class="hero-card-role">定位: ${getRoleCN(h.role)}</div>
-          <div class="hero-card-stat">等級 ${h.power} | 🏆 ${h.trophy} 盃</div>
+          <div class="hero-card-name">#${i} ${heroData.name}</div>
+          <div class="hero-card-role">${heroData.role}</div>
+          <div class="hero-card-stat">${heroData.stat}</div>
         `;
         container.appendChild(card);
-      });
+      }
     }
 
-    function getRoleCN(role) {
-      const map = {
-        tank: '坦克',
-        assassin: '刺客',
-        shooter: '射手',
-        mage: '法師',
-        support: '輔助',
-        warrior: '鬥士'
-      };
-      return map[role] || '英雄';
-    }
-
-    function filterRole(roleType) {
-      const chips = document.querySelectorAll('.chip');
-      chips.forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      renderHeroGrid(roleType);
-    }
-
-    function switchTab(tabKey) {
+    function switchTab(tab) {
       const btns = document.querySelectorAll('.nav-btn');
-      btns.forEach(b => b.classList.remove('active'));
+      btns.forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
 
       const cards = {
-        heroes: 'card-hero',
-        pass: 'card-pass',
-        treasury: 'card-currency',
-        history: 'card-years',
-        contact: 'card-contact'
+        'heroes': 'card-hero',
+        'pass': 'card-pass',
+        'treasury': 'card-currency',
+        'history': 'card-years',
+        'contact': 'card-contact'
       };
 
-      if (tabKey === 'all') {
+      if (tab === 'all') {
         Object.values(cards).forEach(id => {
           const el = document.getElementById(id);
           if (el) el.style.display = 'flex';
@@ -1340,44 +1225,40 @@
         Object.keys(cards).forEach(key => {
           const el = document.getElementById(cards[key]);
           if (el) {
-            el.style.display = (key === tabKey) ? 'flex' : 'none';
+            el.style.display = (key === tab) ? 'flex' : 'none';
           }
         });
       }
     }
 
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
+    function filterRole(role) {
+      const chips = document.querySelectorAll('.chip');
+      chips.forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
       if (modal) modal.classList.add('active');
     }
 
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
+    function closeModal(id) {
+      const modal = document.getElementById(id);
       if (modal) modal.classList.remove('active');
     }
 
-    function copyContact(type, value) {
-      navigator.clipboard.writeText(value).then(() => {
-        showToast(`已成功複製 ${type}：${value}`);
+    function copyContact(type, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.innerText = `已複製 ${type}：${text}`;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
       }).catch(() => {
-        showToast(`複製失敗，請手動複製：${value}`);
+        alert(`請手動複製 ${type}：${text}`);
       });
     }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2800);
-    }
-
-    window.addEventListener('click', (e) => {
-      if (e.target.classList.contains('modal-overlay')) {
-        e.target.classList.remove('active');
-      }
-    });
   </script>
 </body>
 </html>
