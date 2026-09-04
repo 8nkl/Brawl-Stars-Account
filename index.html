@@ -1,1443 +1,750 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MG | HEIAN - Brawl Stars Account Profile</title>
-  <style>
-    :root {
-      --bg-dark: #030712;
-      --card-bg: rgba(15, 23, 42, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary-blue: #3b82f6;
-      --primary-purple: #8b5cf6;
-      --primary-pink: #ec4899;
-      --primary-green: #10b981;
-      --primary-amber: #f59e0b;
-      --primary-cyan: #06b6d4;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --glow-blue: rgba(59, 130, 246, 0.4);
-      --glow-purple: rgba(139, 92, 246, 0.4);
-      --glow-pink: rgba(236, 72, 153, 0.4);
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-      user-select: none;
-    }
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #030712;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(139, 92, 246, 0.4);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(139, 92, 246, 0.7);
-    }
-    body {
-      background: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 40px 20px;
-    }
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .app-container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 1280px;
-      display: flex;
-      flex-direction: column;
-      gap: 35px;
-    }
-    .header-panel {
-      background: var(--card-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid rgba(139, 92, 246, 0.35);
-      border-radius: 28px;
-      padding: 35px 45px;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(139, 92, 246, 0.15);
-      animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    .header-panel::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 255, 255, 0.03),
-        transparent
-      );
-      transform: rotate(30deg);
-      animation: sweepGlow 8s infinite linear;
-    }
-    .user-badge-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    .player-tag-pill {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid rgba(139, 92, 246, 0.5);
-      color: #c084fc;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    .player-title-pill {
-      background: rgba(236, 72, 153, 0.2);
-      border: 1px solid rgba(236, 72, 153, 0.5);
-      color: #f472b6;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    .header-panel h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-    }
-    .header-stats-strip {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    .strip-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #e5e7eb;
-    }
-    .strip-val {
-      color: #fbbf24;
-      font-size: 1.3rem;
-      font-weight: 900;
-    }
-    .nav-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 25px;
-      flex-wrap: wrap;
-    }
-    .nav-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      padding: 10px 20px;
-      border-radius: 14px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      border-color: rgba(139, 92, 246, 0.4);
-      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
-    }
-    .nav-btn.active {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
-      border-color: #8b5cf6;
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-    }
-    .grid-layout {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-    }
-    @media (max-width: 960px) {
-      .grid-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-    .glass-card {
-      position: relative;
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      border-radius: 30px;
-      padding: 35px;
-      overflow: hidden;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
-      transform-style: preserve-3d;
-      perspective: 1000px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-    }
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-    .glass-card:hover::before {
-      opacity: 1;
-    }
-    .glass-card:hover {
-      transform: translateY(-8px) scale(1.01);
-      border-color: rgba(168, 85, 247, 0.4);
-      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25), 0 0 30px rgba(59, 130, 246, 0.15);
-    }
-    .card-1 { border-top: 4px solid var(--primary-blue); animation-delay: 0.1s; }
-    .card-2 { border-top: 4px solid var(--primary-green); animation-delay: 0.2s; }
-    .card-3 { border-top: 4px solid var(--primary-amber); animation-delay: 0.3s; }
-    .card-4 { border-top: 4px solid var(--primary-pink); animation-delay: 0.4s; }
-    .card-5 { border-top: 4px solid var(--primary-cyan); animation-delay: 0.5s; grid-column: span 2; }
-    @media (max-width: 960px) {
-      .card-5 { grid-column: span 1; }
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Tech Glassmorphism Interface</title>
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --glass-bg: rgba(15, 23, 42, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shine: rgba(255, 255, 255, 0.25);
+            --neon-blue: #00f0ff;
+            --neon-purple: #7000ff;
+            --neon-pink: #ff007f;
+            --neon-green: #00ff88;
+            --neon-gold: #ffaa00;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-    .card-title-group {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .card-icon-box {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.7rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05);
-    }
-    .card-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 1px;
-    }
-    .card-tag {
-      font-size: 0.82rem;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      letter-spacing: 0.5px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
 
-    .hero-counter-box {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-    .hero-number {
-      font-size: 4.5rem;
-      font-weight: 900;
-      line-height: 1;
-      background: linear-gradient(180deg, #ffffff 0%, #60a5fa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.4));
-    }
-    .hero-unit {
-      font-size: 1.35rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-    .progress-bar-container {
-      width: 100%;
-      height: 14px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 25px;
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
-      border-radius: 8px;
-      transition: width 2.2s cubic-bezier(0.1, 1, 0.1, 1);
-      box-shadow: 0 0 15px #3b82f6;
-    }
-    .hero-filter-chips {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .chip {
-      padding: 5px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .chip.active, .chip:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
-      color: #ffffff;
-    }
-    .hero-tags-flex {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .hero-badge {
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #93c5fd;
-      padding: 8px 16px;
-      border-radius: 14px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
 
-    .pass-container {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .pass-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 18px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-    }
-    .pass-item:hover {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.3);
-      transform: translateX(5px);
-    }
-    .pass-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .pass-status-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 12px #10b981;
-      animation: pulseGlow 2s infinite;
-    }
-    .pass-title {
-      font-weight: 600;
-      color: #e5e7eb;
-      font-size: 0.95rem;
-    }
-    .pass-level {
-      font-weight: 700;
-      color: #34d399;
-      background: rgba(16, 185, 129, 0.15);
-      padding: 6px 14px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-    }
-    .key-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .key-box {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-    }
-    .key-num {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #34d399;
-    }
-    .key-lbl {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    .currency-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .currency-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .currency-card:hover {
-      background: rgba(245, 158, 11, 0.08);
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-    .currency-card::after {
-      content: '';
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      width: 50px;
-      height: 50px;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
-    }
-    .currency-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-    .currency-amount {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #fbbf24;
-      text-shadow: 0 0 15px rgba(251, 191, 36, 0.35);
-    }
+        .ambient-glow {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(112, 0, 255, 0.12) 40%, rgba(0, 0, 0, 0) 70%);
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: blur(90px);
+            z-index: 0;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+        }
 
-    .year-display {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      margin-bottom: 22px;
-    }
-    .year-badge-big {
-      width: 95px;
-      height: 95px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(168, 85, 247, 0.2));
-      border: 2px solid rgba(236, 72, 153, 0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 30px rgba(236, 72, 153, 0.35);
-      animation: floatAnimation 4s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    .year-val {
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: #f472b6;
-      line-height: 1;
-    }
-    .year-lbl {
-      font-size: 0.78rem;
-      color: #fbcfe8;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-    }
-    .year-details {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .year-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-    .year-sub {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-    .timeline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .timeline-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.9rem;
-      color: #d1d5db;
-    }
-    .timeline-icon {
-      color: #ec4899;
-      font-size: 1.1rem;
-    }
+        @keyframes pulseGlow {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            100% { transform: translateX(-50%) scale(1.3); opacity: 0.95; }
+        }
 
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-top: 15px;
-    }
-    @media (max-width: 600px) {
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .contact-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 14px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      color: #ffffff;
-      cursor: pointer;
-    }
-    .contact-card:hover {
-      background: rgba(6, 182, 212, 0.12);
-      border-color: rgba(6, 182, 212, 0.4);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
-    }
-    .contact-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 18px;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-    }
-    .contact-name {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-    .contact-val {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      word-break: break-all;
-    }
-    .contact-action-btn {
-      margin-top: 5px;
-      padding: 8px 18px;
-      border-radius: 12px;
-      background: rgba(6, 182, 212, 0.2);
-      border: 1px solid rgba(6, 182, 212, 0.4);
-      color: #67e8f9;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem 1.5rem 4rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
 
-    .card-footer-btn {
-      margin-top: 25px;
-      width: 100%;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: #ffffff;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .card-footer-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-    }
+        .top-price-hero {
+            position: relative;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        0 0 40px rgba(0, 240, 255, 0.1);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+        }
 
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(3, 7, 18, 0.85);
-      backdrop-filter: blur(15px);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-box {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      border-radius: 28px;
-      width: 90%;
-      max-width: 750px;
-      padding: 40px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.3);
-      transform: scale(0.85) translateY(30px);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-    .modal-overlay.active .modal-box {
-      transform: scale(1) translateY(0);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 15px;
-    }
-    .modal-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.8rem;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-    .modal-close:hover {
-      color: #ffffff;
-    }
-    .modal-body {
-      color: #d1d5db;
-      font-size: 1rem;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .modal-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      max-height: 400px;
-      overflow-y: auto;
-      padding-right: 5px;
-    }
-    .hero-item-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      transition: all 0.2s ease;
-    }
-    .hero-item-card:hover {
-      background: rgba(139, 92, 246, 0.15);
-      border-color: rgba(139, 92, 246, 0.4);
-    }
-    .hero-card-name {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #ffffff;
-    }
-    .hero-card-role {
-      font-size: 0.75rem;
-      color: #c084fc;
-    }
-    .hero-card-stat {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+        .top-price-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 45%,
+                rgba(255, 255, 255, 0.08) 50%,
+                transparent 55%
+            );
+            animation: sweepShimmer 6s infinite linear;
+            pointer-events: none;
+        }
 
-    .toast-msg {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: linear-gradient(135deg, #06b6d4, #3b82f6);
-      color: #ffffff;
-      padding: 12px 28px;
-      border-radius: 30px;
-      font-weight: 700;
-      box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
-      z-index: 200;
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .toast-msg.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+        @keyframes sweepShimmer {
+            0% { transform: translate(-30%, -30%) rotate(0deg); }
+            100% { transform: translate(30%, 30%) rotate(360deg); }
+        }
 
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.35); opacity: 0.5; }
-    }
-    @keyframes floatAnimation {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(3deg); }
-    }
-    @keyframes sweepGlow {
-      0% { transform: rotate(30deg) translateY(-100%); }
-      100% { transform: rotate(30deg) translateY(100%); }
-    }
-  </style>
+        .top-price-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), transparent);
+            animation: scanBorder 3s infinite ease-in-out;
+        }
+
+        @keyframes scanBorder {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .price-info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .price-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            width: fit-content;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: blink 1.5s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .badge-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+        }
+
+        .price-display-container {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .price-amount {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--neon-blue) 50%, var(--neon-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 25px rgba(0, 240, 255, 0.3);
+            position: relative;
+        }
+
+        .price-currency {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--neon-blue);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .hero-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            z-index: 2;
+        }
+
+        .action-btn-primary {
+            position: relative;
+            padding: 1rem 2.2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(112, 0, 255, 0.4),
+                        0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(112, 0, 255, 0.6),
+                        0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        .action-btn-primary:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .action-btn-secondary {
+            position: relative;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .glass-card {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5),
+                        0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .card-subtext {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trend-up {
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 75%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 12px var(--neon-blue);
+            animation: fillGlow 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes fillGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.4); }
+        }
+
+        .bottom-slogan-section {
+            position: relative;
+            width: 100%;
+            margin-top: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(30px) saturate(210%);
+            -webkit-backdrop-filter: blur(30px) saturate(210%);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        0 0 30px rgba(112, 0, 255, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .bottom-slogan-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.15), transparent);
+            animation: linePass 4s infinite linear;
+        }
+
+        @keyframes linePass {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .slogan-title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .slogan-main-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--neon-blue) 60%, var(--neon-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .slogan-sub-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .download-btn-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        .download-slogan-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.1rem 2.5rem;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            background: linear-gradient(135deg, #00f0ff 0%, #7000ff 50%, #ff007f 100%);
+            background-size: 200% 200%;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.35),
+                        0 0 20px rgba(112, 0, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: gradientShift 4s ease infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .download-slogan-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 45px rgba(0, 240, 255, 0.6),
+                        0 0 35px rgba(255, 0, 127, 0.5);
+            border-color: #ffffff;
+        }
+
+        .download-slogan-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .download-icon-anim {
+            display: inline-block;
+            font-size: 1.3rem;
+            animation: bounceDown 1.5s infinite ease-in-out;
+        }
+
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(4px); }
+        }
+
+        .interactive-glow-box {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .top-price-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+                padding: 2rem;
+            }
+
+            .hero-controls {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .price-amount {
+                font-size: 3.2rem;
+            }
+
+            .slogan-main-text {
+                font-size: 1.4rem;
+            }
+
+            .download-slogan-btn {
+                padding: 0.9rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <canvas id="bg-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+    <div class="ambient-glow"></div>
 
-  <div class="app-container">
-    <div class="header-panel">
-      <div class="user-badge-row">
-        <span class="player-tag-pill">TAG: #2CJUQGRGO</span>
-        <span class="player-title-pill">稱號：咒術之王</span>
-      </div>
-      <h1>MG | HEIAN</h1>
-      <p>荒野亂鬥 109,029 盃 頂級殿堂級帳號庫存面板</p>
-      
-      <div class="header-stats-strip">
-        <div class="strip-item"><span>🏆 榮耀盃數：</span><span class="strip-val" id="trophy-val">0</span></div>
-        <div class="strip-item"><span>👑 巔峰威望：</span><span class="strip-val">95</span></div>
-        <div class="strip-item"><span>⚔️ 英雄收集：</span><span class="strip-val">106 / 106</span></div>
-      </div>
-
-      <div class="nav-tabs">
-        <button class="nav-btn active" onclick="switchTab('all')">全部總覽</button>
-        <button class="nav-btn" onclick="switchTab('heroes')">英雄數據</button>
-        <button class="nav-btn" onclick="switchTab('pass')">通行證紀錄</button>
-        <button class="nav-btn" onclick="switchTab('treasury')">資產金庫</button>
-        <button class="nav-btn" onclick="switchTab('history')">七年資歷</button>
-        <button class="nav-btn" onclick="switchTab('contact')">聯繫方式</button>
-      </div>
-    </div>
-
-    <div class="grid-layout">
-      
-      <div class="glass-card card-1" id="card-hero">
-        <div>
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="card-icon-box">⚔️</div>
-              <div class="card-title">區域 1：英雄圖鑑</div>
-            </div>
-            <div class="card-tag">全英雄解鎖</div>
-          </div>
-          <div class="hero-counter-box">
-            <span class="hero-number" id="hero-count">0</span>
-            <span class="hero-unit">/ 106 位英雄</span>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="hero-bar"></div>
-          </div>
-          <div class="hero-filter-chips">
-            <span class="chip active" onclick="filterRole('all')">全部</span>
-            <span class="chip" onclick="filterRole('tank')">坦克</span>
-            <span class="chip" onclick="filterRole('assassin')">刺客</span>
-            <span class="chip" onclick="filterRole('shooter')">射手</span>
-            <span class="chip" onclick="filterRole('mage')">法師</span>
-            <span class="chip" onclick="filterRole('support')">輔助</span>
-            <span class="chip" onclick="filterRole('warrior')">鬥士</span>
-          </div>
-          <div class="hero-tags-flex">
-            <div class="hero-badge"><span>🔥</span> 109,029 盃頂峰</div>
-            <div class="hero-badge"><span>👑</span> 95 級巔峰威望</div>
-            <div class="hero-badge"><span>⚡</span> 全英雄完全擁有</div>
-          </div>
-        </div>
-        <button class="card-footer-btn" onclick="openModal('heroModal')">
-          <span>展開 106 位英雄矩陣清單</span> 🔍
-        </button>
-      </div>
-
-      <div class="glass-card card-2" id="card-pass">
-        <div>
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="card-icon-box">🎫</div>
-              <div class="card-title">區域 2：通行證與寶庫</div>
-            </div>
-            <div class="card-tag">高級通行券啟用</div>
-          </div>
-          <div class="pass-container">
-            <div class="pass-item">
-              <div class="pass-info">
-                <div class="pass-status-dot"></div>
-                <div class="pass-title">高級通行券 (Brawl Pass Plus)</div>
-              </div>
-              <div class="pass-level">已啟用</div>
-            </div>
-            <div class="pass-item">
-              <div class="pass-info">
-                <div class="pass-status-dot"></div>
-                <div class="pass-title">第 49 季綠龍造型套裝</div>
-              </div>
-              <div class="pass-level">已獲得</div>
-            </div>
-            <div class="pass-item">
-              <div class="pass-info">
-                <div class="pass-status-dot"></div>
-                <div class="pass-title">波可極限威能吊飾</div>
-              </div>
-              <div class="pass-level">已解鎖</div>
-            </div>
+    <div class="main-wrapper">
+        
+        <div class="top-price-hero" id="hero-card">
+            <div class="interactive-glow-box" id="hero-glow"></div>
             
-            <div class="key-grid">
-              <div class="key-box">
-                <div class="key-num">11</div>
-                <div class="key-lbl">造型鑰匙</div>
-              </div>
-              <div class="key-box">
-                <div class="key-num">2</div>
-                <div class="key-lbl">資源鑰匙</div>
-              </div>
-              <div class="key-box">
-                <div class="key-num">1</div>
-                <div class="key-lbl">吊飾鑰匙</div>
-              </div>
-              <div class="key-box">
-                <div class="key-num">1</div>
-                <div class="key-lbl">通行鑰匙</div>
-              </div>
+            <div class="price-info-group">
+                <div class="price-badge">
+                    <span class="badge-dot"></span>
+                    <span class="badge-text">LIVE VALUATION</span>
+                </div>
+                <div class="price-display-container">
+                    <span class="price-amount" id="counter-price">0</span>
+                    <span class="price-currency">UST</span>
+                </div>
             </div>
-          </div>
-        </div>
-        <button class="card-footer-btn" onclick="openModal('passModal')">
-          <span>檢視寶庫詳細解鎖清單</span> 📜
-        </button>
-      </div>
 
-      <div class="glass-card card-3" id="card-currency">
-        <div>
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="card-icon-box">💎</div>
-              <div class="card-title">區域 3：寶石與資產庫</div>
+            <div class="hero-controls">
+                <button class="action-btn-primary" id="btn-buy">PURCHASE NOW</button>
+                <button class="action-btn-secondary" id="btn-details">DETAILS</button>
             </div>
-            <div class="card-tag">實機數據同步</div>
-          </div>
-          <div class="currency-grid">
-            <div class="currency-card">
-              <div class="currency-header">🪙 金幣儲備</div>
-              <div class="currency-amount" id="coin-count">0</div>
-            </div>
-            <div class="currency-card">
-              <div class="currency-header">✨ 閃耀幣</div>
-              <div class="currency-amount" id="bling-count">0</div>
-            </div>
-            <div class="currency-card">
-              <div class="currency-header">⚡ 戰力能量</div>
-              <div class="currency-amount" id="power-count">0</div>
-            </div>
-            <div class="currency-card">
-              <div class="currency-header">💎 綠寶石</div>
-              <div class="currency-amount" id="gem-count">0</div>
-            </div>
-          </div>
         </div>
-        <button class="card-footer-btn" onclick="openModal('treasuryModal')">
-          <span>開啟資產庫兌換模擬器</span> ⚖️
-        </button>
-      </div>
 
-      <div class="glass-card card-4" id="card-years">
-        <div>
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="card-icon-box">⏳</div>
-              <div class="card-title">區域 4：帳號資歷</div>
+        <div class="grid-container">
+            
+            <div class="glass-card">
+                <div class="card-header">
+                    <span class="card-title">24H VOLUME</span>
+                    <div class="card-icon">⚡</div>
+                </div>
+                <div class="card-value">$4,829,100</div>
+                <div class="card-subtext">
+                    <span class="trend-up">+14.2%</span> VS LAST 24 HOURS
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 82%;"></div>
+                </div>
             </div>
-            <div class="card-tag">元老級玩家</div>
-          </div>
-          <div class="year-display">
-            <div class="year-badge-big">
-              <div class="year-val">7</div>
-              <div class="year-lbl">YEARS</div>
-            </div>
-            <div class="year-details">
-              <div class="year-title">帳號已持續營運 7 年</div>
-              <div class="year-sub">自開服首年即創立，累積無數限量勳章與極稀有戰績歷史紀錄。</div>
-            </div>
-          </div>
-          <div class="timeline-list">
-            <div class="timeline-item"><span class="timeline-icon">✦</span> 玩家標籤：#2CJUQGRGO</div>
-            <div class="timeline-item"><span class="timeline-icon">✦</span> 個人稱號：咒術之王</div>
-            <div class="timeline-item"><span class="timeline-icon">✦</span> 信譽評級：SSS 級頂級零違規榮譽紀錄</div>
-          </div>
-        </div>
-        <button class="card-footer-btn" onclick="openModal('yearsModal')">
-          <span>查看 7 週年時光里程碑</span> 🏛️
-        </button>
-      </div>
 
-      <div class="glass-card card-5" id="card-contact">
-        <div>
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="card-icon-box">💬</div>
-              <div class="card-title">區域 5：聯繫方式與對接</div>
+            <div class="glass-card">
+                <div class="card-header">
+                    <span class="card-title">NETWORK HEALTH</span>
+                    <div class="card-icon">🛡️</div>
+                </div>
+                <div class="card-value">99.98%</div>
+                <div class="card-subtext">
+                    <span class="trend-up">OPTIMAL</span> LATENCY 12MS
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 99%; background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));"></div>
+                </div>
             </div>
-            <div class="card-tag">官方個人管道</div>
-          </div>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px;">
-            如有關於帳號交流、諮詢或戰隊合作，請透過以下官方管道聯繫：
-          </p>
-          <div class="contact-grid">
-            <div class="contact-card" onclick="copyContact('Discord Tag', 'tw_.8nkl')">
-              <div class="contact-icon">🎮</div>
-              <div class="contact-name">Discord</div>
-              <div class="contact-val">tw_.8nkl</div>
-              <div class="contact-action-btn">點擊複製</div>
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <span class="card-title">TOTAL LIQUIDITY</span>
+                    <div class="card-icon">💎</div>
+                </div>
+                <div class="card-value">850,000 UST</div>
+                <div class="card-subtext">
+                    <span class="trend-up">+8.5%</span> STAKING POOL
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 64%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));"></div>
+                </div>
             </div>
-            <div class="contact-card" onclick="copyContact('Gmail', 'vy.8nkl@hotmail.com')">
-              <div class="contact-icon">✉️</div>
-              <div class="contact-name">Gmail</div>
-              <div class="contact-val">vy.8nkl@hotmail.com</div>
-              <div class="contact-action-btn">點擊複製</div>
-            </div>
-          </div>
+
         </div>
-      </div>
+
+        <div class="bottom-slogan-section">
+            <div class="slogan-title-group">
+                <div class="slogan-main-text">下載詳細內容</div>
+                <div class="slogan-sub-text">獲取完整系統規格說明文件與完整帳號數據資料</div>
+            </div>
+
+            <div class="download-btn-wrapper">
+                <a href="https://raw.githubusercontent.com/8nkl/Brawl-Stars-Account/main/6.pdf" target="_blank" rel="noopener noreferrer" class="download-slogan-btn">
+                    <span class="download-icon-anim">📥</span>
+                    <span>下載詳細內容文件 (PDF)</span>
+                </a>
+            </div>
+        </div>
 
     </div>
-  </div>
 
-  <div class="modal-overlay" id="heroModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">區域 1：106 位英雄完整矩陣清單</div>
-        <button class="modal-close" onclick="closeModal('heroModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>此帳號已完全解鎖遊戲內全部 106 位英雄，並擁有全部滿階戰力與專屬專精勳章。</p>
-        <div class="modal-grid" id="heroGridContainer"></div>
-      </div>
-    </div>
-  </div>
+    <script>
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
 
-  <div class="modal-overlay" id="passModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">區域 2：歷年 Pass 通行證與寶庫檔案庫</div>
-        <button class="modal-close" onclick="closeModal('passModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>累積 7 年來每個賽季的黃金與尊爵通行證，包含最新進度：</p>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div class="pass-item"><span>高級通行券 (Brawl Pass Plus)</span><span class="pass-level">已啟用</span></div>
-          <div class="pass-item"><span>第 49 季綠龍造型套裝</span><span class="pass-level">已解鎖</span></div>
-          <div class="pass-item"><span>波可極限威能吊飾</span><span class="pass-level">已解鎖</span></div>
-          <div class="pass-item"><span>造型鑰匙儲備</span><span class="pass-level">11 把</span></div>
-          <div class="pass-item"><span>資源鑰匙儲備</span><span class="pass-level">2 把</span></div>
-          <div class="pass-item"><span>吊飾鑰匙儲備</span><span class="pass-level">1 把</span></div>
-          <div class="pass-item"><span>通行鑰匙儲備</span><span class="pass-level">1 把</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
+        let particles = [];
+        const particleCount = 60;
 
-  <div class="modal-overlay" id="treasuryModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">區域 3：資產庫詳細數據</div>
-        <button class="modal-close" onclick="closeModal('treasuryModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>擁有海量儲備資源，可任意抽滿未來多個賽季的所有限定活動與主題寶箱。</p>
-        <div class="currency-card">
-          <div class="currency-header">💰 金幣總量</div>
-          <div class="currency-amount">98,605</div>
-        </div>
-        <div class="currency-card">
-          <div class="currency-header">✨ 閃耀幣</div>
-          <div class="currency-amount">22,072</div>
-        </div>
-        <div class="currency-card">
-          <div class="currency-header">⚡ 戰力能量</div>
-          <div class="currency-amount">8,563</div>
-        </div>
-        <div class="currency-card">
-          <div class="currency-header">💎 綠寶石</div>
-          <div class="currency-amount">180</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="yearsModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">區域 4：7 年光輝歷史紀錄</div>
-        <button class="modal-close" onclick="closeModal('yearsModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>見證遊戲開服至今的每一個輝煌時刻，榮獲 7 週年紀念稱號與老玩家專屬光環。</p>
-        <div class="timeline-list">
-          <div class="timeline-item"><span class="timeline-icon">📅</span> 創立年份：2019 年元老伺服器</div>
-          <div class="timeline-item"><span class="timeline-icon">🏆</span> 榮耀盃數：109,029 盃</div>
-          <div class="timeline-item"><span class="timeline-icon">⭐</span> 巔峰威望：95 級</div>
-          <div class="timeline-item"><span class="timeline-icon">👑</span> 玩家稱號：咒術之王</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast-msg" id="toast">已成功複製資訊！</div>
-
-  <script>
-    const heroesDataList = [
-      { id: 1, name: "雪莉 (Shelly)", role: "warrior", power: 11, trophies: 1250, mastery: "III" },
-      { id: 2, name: "妮塔 (Nita)", role: "warrior", power: 11, trophies: 1180, mastery: "III" },
-      { id: 3, name: "高爾特 (Colt)", role: "shooter", power: 11, trophies: 1220, mastery: "III" },
-      { id: 4, name: "公牛 (Bull)", role: "tank", power: 11, trophies: 1150, mastery: "III" },
-      { id: 5, name: "潔西 (Jessie)", role: "shooter", power: 11, trophies: 1100, mastery: "III" },
-      { id: 6, name: "布洛克 (Brock)", role: "shooter", power: 11, trophies: 1080, mastery: "III" },
-      { id: 7, name: "爆破麥克 (Dynamike)", role: "mage", power: 11, trophies: 1250, mastery: "III" },
-      { id: 8, name: "阿勃 (Bo)", role: "shooter", power: 11, trophies: 1050, mastery: "III" },
-      { id: 9, name: "滴答 (Tick)", role: "mage", power: 11, trophies: 1120, mastery: "III" },
-      { id: 10, name: "8 位元 (8-Bit)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
-      { id: 11, name: "艾姆絲 (Emz)", role: "mage", power: 11, trophies: 1140, mastery: "III" },
-      { id: 12, name: "普里莫 (El Primo)", role: "tank", power: 11, trophies: 1200, mastery: "III" },
-      { id: 13, name: "波可 (Poco)", role: "support", power: 11, trophies: 1250, mastery: "III" },
-      { id: 14, name: "羅莎 (Rosa)", role: "tank", power: 11, trophies: 1070, mastery: "III" },
-      { id: 15, name: "巴利 (Barley)", role: "mage", power: 11, trophies: 1030, mastery: "III" },
-      { id: 16, name: "理查 (Rico)", role: "shooter", power: 11, trophies: 1190, mastery: "III" },
-      { id: 17, name: "佩妮 (Penny)", role: "shooter", power: 11, trophies: 1040, mastery: "III" },
-      { id: 18, name: "卡爾 (Carl)", role: "warrior", power: 11, trophies: 1060, mastery: "III" },
-      { id: 19, name: "雅琪 (Jacky)", role: "tank", power: 11, trophies: 1080, mastery: "III" },
-      { id: 20, name: "佩佩 (Piper)", role: "shooter", power: 11, trophies: 1250, mastery: "III" },
-      { id: 21, name: "珮姆 (Pam)", role: "support", power: 11, trophies: 1020, mastery: "III" },
-      { id: 22, name: "法蘭克 (Frank)", role: "tank", power: 11, trophies: 1210, mastery: "III" },
-      { id: 23, name: "碧碧 (Bibi)", role: "tank", power: 11, trophies: 1160, mastery: "III" },
-      { id: 24, name: "蜜蜂 (Bea)", role: "shooter", power: 11, trophies: 1100, mastery: "III" },
-      { id: 25, name: "娜妮 (Nani)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
-      { id: 26, name: "艾德加 (Edgar)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 27, name: "葛里夫 (Griff)", role: "shooter", power: 11, trophies: 1050, mastery: "III" },
-      { id: 28, name: "格羅姆 (Grom)", role: "mage", power: 11, trophies: 1070, mastery: "III" },
-      { id: 29, name: "邦妮 (Bonnie)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
-      { id: 30, name: "蓋爾 (Gale)", role: "support", power: 11, trophies: 1120, mastery: "III" },
-      { id: 31, name: "柯萊特 (Colette)", role: "warrior", power: 11, trophies: 1150, mastery: "III" },
-      { id: 32, name: "路 (Lou)", role: "support", power: 11, trophies: 1080, mastery: "III" },
-      { id: 33, name: "拉夫斯 (Ruffs)", role: "support", power: 11, trophies: 1040, mastery: "III" },
-      { id: 34, name: "貝爾 (Belle)", role: "shooter", power: 11, trophies: 1130, mastery: "III" },
-      { id: 35, name: "巴茲 (Buzz)", role: "assassin", power: 11, trophies: 1200, mastery: "III" },
-      { id: 36, name: "方 (Fang)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 37, name: "伊芙 (Eve)", role: "mage", power: 11, trophies: 1060, mastery: "III" },
-      { id: 38, name: "珍妮特 (Janet)", role: "shooter", power: 11, trophies: 1070, mastery: "III" },
-      { id: 39, name: "奧提斯 (Otis)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
-      { id: 40, name: "薩姆 (Sam)", role: "assassin", power: 11, trophies: 1050, mastery: "III" },
-      { id: 41, name: "巴斯特 (Buster)", role: "tank", power: 11, trophies: 1110, mastery: "III" },
-      { id: 42, name: "曼蒂 (Mandy)", role: "shooter", power: 11, trophies: 1140, mastery: "III" },
-      { id: 43, name: "R-T", role: "shooter", power: 11, trophies: 1080, mastery: "III" },
-      { id: 44, name: "薇洛 (Willow)", role: "mage", power: 11, trophies: 1030, mastery: "III" },
-      { id: 45, name: "漢克 (Hank)", role: "tank", power: 11, trophies: 1020, mastery: "III" },
-      { id: 46, name: "珍珠 (Pearl)", role: "warrior", power: 11, trophies: 1070, mastery: "III" },
-      { id: 47, name: "拉里與勞里 (Larry & Lawrie)", role: "mage", power: 11, trophies: 1220, mastery: "III" },
-      { id: 48, name: "梅洛迪 (Melodie)", role: "assassin", power: 11, trophies: 1200, mastery: "III" },
-      { id: 49, name: "安傑洛 (Angelo)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
-      { id: 50, name: "德拉科 (Draco)", role: "tank", power: 11, trophies: 1210, mastery: "III" },
-      { id: 51, name: "莉莉 (Lily)", role: "assassin", power: 11, trophies: 1190, mastery: "III" },
-      { id: 52, name: "克蘭西 (Clancy)", role: "warrior", power: 11, trophies: 1150, mastery: "III" },
-      { id: 53, name: "貝利 (Berry)", role: "support", power: 11, trophies: 1100, mastery: "III" },
-      { id: 54, name: "莫 (Moe)", role: "mage", power: 11, trophies: 1120, mastery: "III" },
-      { id: 55, name: "健二 (Kenji)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 56, name: "茱茱 (Juju)", role: "mage", power: 11, trophies: 1080, mastery: "III" },
-      { id: 57, name: "謝德 (Shade)", role: "assassin", power: 11, trophies: 1090, mastery: "III" },
-      { id: 58, name: "莫提斯 (Mortis)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 59, name: "塔拉 (Tara)", role: "mage", power: 11, trophies: 1130, mastery: "III" },
-      { id: 60, name: "吉恩 (Gene)", role: "support", power: 11, trophies: 1110, mastery: "III" },
-      { id: 61, name: "麥克斯 (Max)", role: "support", power: 11, trophies: 1170, mastery: "III" },
-      { id: 62, name: "史普勞特 (Sprout)", role: "mage", power: 11, trophies: 1060, mastery: "III" },
-      { id: 63, name: "拜倫 (Byron)", role: "support", power: 11, trophies: 1120, mastery: "III" },
-      { id: 64, name: "史魁克 (Squeak)", role: "mage", power: 11, trophies: 1050, mastery: "III" },
-      { id: 65, name: "盧 (Lou)", role: "support", power: 11, trophies: 1040, mastery: "III" },
-      { id: 66, name: "查克 (Chuck)", role: "warrior", power: 11, trophies: 1090, mastery: "III" },
-      { id: 67, name: "史派克 (Spike)", role: "shooter", power: 11, trophies: 1250, mastery: "III" },
-      { id: 68, name: "鴉 (Crow)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 69, name: "里昂 (Leon)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
-      { id: 70, name: "沙迪 (Sandy)", role: "support", power: 11, trophies: 1200, mastery: "III" },
-      { id: 71, name: "琥珀 (Amber)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
-      { id: 72, name: "梅格 (Meg)", role: "tank", power: 11, trophies: 1150, mastery: "III" },
-      { id: 73, name: "徹斯特 (Chester)", role: "warrior", power: 11, trophies: 1160, mastery: "III" },
-      { id: 74, name: "科迪琉斯 (Cordelius)", role: "assassin", power: 11, trophies: 1220, mastery: "III" },
-      { id: 75, name: "米普 (Mico)", role: "assassin", power: 11, trophies: 1100, mastery: "III" },
-      { id: 76, name: "基特 (Kit)", role: "support", power: 11, trophies: 1230, mastery: "III" },
-      { id: 77, name: "英雄 #77", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
-      { id: 78, name: "英雄 #78", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
-      { id: 79, name: "英雄 #79", role: "tank", power: 11, trophies: 1000, mastery: "III" },
-      { id: 80, name: "英雄 #80", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
-      { id: 81, name: "英雄 #81", role: "support", power: 11, trophies: 1000, mastery: "III" },
-      { id: 82, name: "英雄 #82", role: "mage", power: 11, trophies: 1000, mastery: "III" },
-      { id: 83, name: "英雄 #83", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
-      { id: 84, name: "英雄 #84", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
-      { id: 85, name: "英雄 #85", role: "tank", power: 11, trophies: 1000, mastery: "III" },
-      { id: 86, name: "英雄 #86", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
-      { id: 87, name: "英雄 #87", role: "support", power: 11, trophies: 1000, mastery: "III" },
-      { id: 88, name: "英雄 #88", role: "mage", power: 11, trophies: 1000, mastery: "III" },
-      { id: 89, name: "英雄 #89", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
-      { id: 90, name: "英雄 #90", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
-      { id: 91, name: "英雄 #91", role: "tank", power: 11, trophies: 1000, mastery: "III" },
-      { id: 92, name: "英雄 #92", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
-      { id: 93, name: "英雄 #93", role: "support", power: 11, trophies: 1000, mastery: "III" },
-      { id: 94, name: "英雄 #94", role: "mage", power: 11, trophies: 1000, mastery: "III" },
-      { id: 95, name: "英雄 #95", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
-      { id: 96, name: "英雄 #96", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
-      { id: 97, name: "英雄 #97", role: "tank", power: 11, trophies: 1000, mastery: "III" },
-      { id: 98, name: "英雄 #98", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
-      { id: 99, name: "英雄 #99", role: "support", power: 11, trophies: 1000, mastery: "III" },
-      { id: 100, name: "英雄 #100", role: "mage", power: 11, trophies: 1000, mastery: "III" },
-      { id: 101, name: "英雄 #101", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
-      { id: 102, name: "英雄 #102", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
-      { id: 103, name: "英雄 #103", role: "tank", power: 11, trophies: 1000, mastery: "III" },
-      { id: 104, name: "英雄 #104", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
-      { id: 105, name: "英雄 #105", role: "support", power: 11, trophies: 1000, mastery: "III" },
-      { id: 106, name: "英雄 #106", role: "mage", power: 11, trophies: 1000, mastery: "III" }
-    ];
-
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let mouseX = -1000;
-    let mouseY = -1000;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.9;
-        this.vy = (Math.random() - 0.5) * 0.9;
-        this.radius = Math.random() * 2.5 + 1;
-        this.alpha = Math.random() * 0.6 + 0.2;
-        this.baseColor = Math.random() > 0.5 ? '#3b82f6' : '#8b5cf6';
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        const dx = mouseX - this.x;
-        const dy = mouseY - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 150) {
-          const force = (150 - dist) / 150;
-          this.x -= (dx / dist) * force * 3;
-          this.y -= (dy / dist) * force * 3;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.baseColor;
-        ctx.globalAlpha = this.alpha;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = this.baseColor;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-    }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-    for (let i = 0; i < 90; i++) {
-      particles.push(new Particle());
-    }
+        class Particle {
+            constructor() {
+                this.reset();
+            }
 
-    function animateCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 140) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${0.28 * (1 - dist / 140)})`;
-            ctx.lineWidth = 0.9;
-            ctx.stroke();
-          }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.6;
+                this.speedY = (Math.random() - 0.5) * 0.6;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 240, 255, ${this.alpha})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#00f0ff';
+                ctx.fill();
+            }
         }
-      }
-      requestAnimationFrame(animateCanvas);
-    }
-    animateCanvas();
 
-    function animateCounter(elementId, target, duration, suffix = '') {
-      const elem = document.getElementById(elementId);
-      if (!elem) return;
-      let startTime = null;
-      function step(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min((timestamp - startTime) / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 4);
-        const current = Math.floor(easeOut * target);
-        elem.innerText = current.toLocaleString() + suffix;
-        if (progress < 1) {
-          requestAnimationFrame(step);
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
         }
-      }
-      requestAnimationFrame(step);
-    }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      animateCounter('trophy-val', 109029, 2200);
-      animateCounter('hero-count', 106, 2000);
-      animateCounter('coin-count', 98605, 2500);
-      animateCounter('bling-count', 22072, 2200);
-      animateCounter('power-count', 8563, 2000);
-      animateCounter('gem-count', 180, 1500);
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
 
-      setTimeout(() => {
-        const bar = document.getElementById('hero-bar');
-        if (bar) bar.style.width = '100%';
-      }, 400);
-
-      initHeroGrid('all');
-    });
-
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        card.style.transform = `perspective(1000px) rotateX(${-y / 25}deg) rotateY(${x / 25}deg) translateY(-8px) scale(1.01)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`;
-      });
-    });
-
-    let audioCtx = null;
-    function playAudioFeedback(freq = 440, type = 'sine') {
-      try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    if (distance < 130) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.15 - distance / 1000})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
         }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animateParticles);
         }
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.25);
-      } catch (e) {}
-    }
 
-    document.querySelectorAll('.glass-card, .nav-btn, .card-footer-btn, .contact-card').forEach(elem => {
-      elem.addEventListener('mouseenter', () => playAudioFeedback(480, 'sine'));
-    });
+        animateParticles();
 
-    function switchTab(tab) {
-      playAudioFeedback(600, 'sine');
-      const btns = document.querySelectorAll('.nav-btn');
-      btns.forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+        const priceElement = document.getElementById('counter-price');
+        const targetPrice = 1500;
+        const duration = 2000;
+        const frameRate = 60;
+        const totalFrames = Math.round((duration / 1000) * frameRate);
+        let currentFrame = 0;
 
-      const c1 = document.getElementById('card-hero');
-      const c2 = document.getElementById('card-pass');
-      const c3 = document.getElementById('card-currency');
-      const c4 = document.getElementById('card-years');
-      const c5 = document.getElementById('card-contact');
+        function animatePriceCounter() {
+            const progress = currentFrame / totalFrames;
+            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+            const currentPrice = Math.round(targetPrice * easeOutQuad);
+            
+            priceElement.innerText = currentPrice.toLocaleString();
 
-      if (tab === 'all') {
-        c1.style.display = 'flex';
-        c2.style.display = 'flex';
-        c3.style.display = 'flex';
-        c4.style.display = 'flex';
-        c5.style.display = 'flex';
-      } else if (tab === 'heroes') {
-        c1.style.display = 'flex';
-        c2.style.display = 'none';
-        c3.style.display = 'none';
-        c4.style.display = 'none';
-        c5.style.display = 'none';
-      } else if (tab === 'pass') {
-        c1.style.display = 'none';
-        c2.style.display = 'flex';
-        c3.style.display = 'none';
-        c4.style.display = 'none';
-        c5.style.display = 'none';
-      } else if (tab === 'treasury') {
-        c1.style.display = 'none';
-        c2.style.display = 'none';
-        c3.style.display = 'flex';
-        c4.style.display = 'none';
-        c5.style.display = 'none';
-      } else if (tab === 'history') {
-        c1.style.display = 'none';
-        c2.style.display = 'none';
-        c3.style.display = 'none';
-        c4.style.display = 'flex';
-        c5.style.display = 'none';
-      } else if (tab === 'contact') {
-        c1.style.display = 'none';
-        c2.style.display = 'none';
-        c3.style.display = 'none';
-        c4.style.display = 'none';
-        c5.style.display = 'flex';
-      }
-    }
+            if (currentFrame < totalFrames) {
+                currentFrame++;
+                requestAnimationFrame(animatePriceCounter);
+            } else {
+                priceElement.innerText = targetPrice.toLocaleString();
+            }
+        }
 
-    function filterRole(role) {
-      playAudioFeedback(650, 'sine');
-      const chips = document.querySelectorAll('.chip');
-      chips.forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      initHeroGrid(role);
-    }
+        setTimeout(animatePriceCounter, 300);
 
-    function openModal(modalId) {
-      playAudioFeedback(750, 'square');
-      const modal = document.getElementById(modalId);
-      if (modal) modal.classList.add('active');
-    }
+        const heroCard = document.getElementById('hero-card');
+        const heroGlow = document.getElementById('hero-glow');
 
-    function closeModal(modalId) {
-      playAudioFeedback(350, 'sine');
-      const modal = document.getElementById(modalId);
-      if (modal) modal.classList.remove('active');
-    }
+        heroCard.addEventListener('mousemove', (e) => {
+            const rect = heroCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-    function initHeroGrid(roleFilter = 'all') {
-      const container = document.getElementById('heroGridContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      
-      const filtered = roleFilter === 'all' 
-        ? heroesDataList 
-        : heroesDataList.filter(h => h.role === roleFilter);
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
 
-      filtered.forEach(hero => {
-        const itemCard = document.createElement('div');
-        itemCard.className = 'hero-item-card';
-        itemCard.innerHTML = `
-          <div class="hero-card-name">${hero.name}</div>
-          <div class="hero-card-role">定位：${hero.role}</div>
-          <div class="hero-card-stat">戰力：Lv.${hero.power} | 盃數：${hero.trophies}</div>
-        `;
-        container.appendChild(itemCard);
-      });
-    }
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
 
-    function copyContact(label, val) {
-      playAudioFeedback(880, 'triangle');
-      navigator.clipboard.writeText(val);
-      const toast = document.getElementById('toast');
-      toast.innerText = `已成功複製 ${label}：${val}`;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-  </script>
+            heroCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+            
+            heroGlow.style.left = `${x}px`;
+            heroGlow.style.top = `${y}px`;
+            heroGlow.style.opacity = '1';
+        });
+
+        heroCard.addEventListener('mouseleave', () => {
+            heroCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            heroGlow.style.opacity = '0';
+        });
+
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.2s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            });
+        });
+    </script>
 </body>
 </html>
