@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg-dark: #030712;
-      --card-bg: rgba(15, 23, 42, 0.6);
+      --card-bg: rgba(15, 23, 42, 0.65);
       --card-border: rgba(255, 255, 255, 0.08);
       --primary-blue: #3b82f6;
       --primary-purple: #8b5cf6;
@@ -651,7 +651,7 @@
       border: 1px solid rgba(139, 92, 246, 0.4);
       border-radius: 28px;
       width: 90%;
-      max-width: 650px;
+      max-width: 750px;
       padding: 40px;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.3);
       transform: scale(0.85) translateY(30px);
@@ -697,19 +697,37 @@
     .modal-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      max-height: 300px;
+      gap: 12px;
+      max-height: 400px;
       overflow-y: auto;
       padding-right: 5px;
     }
-    .hero-mini-card {
+    .hero-item-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .hero-item-card:hover {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+    .hero-card-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .hero-card-role {
+      font-size: 0.75rem;
+      color: #c084fc;
+    }
+    .hero-card-stat {
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
 
     .toast-msg {
@@ -988,11 +1006,11 @@
   <div class="modal-overlay" id="heroModal">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-title">區域 1：106 位英雄展示陣列</div>
+        <div class="modal-title">區域 1：106 位英雄完整矩陣清單</div>
         <button class="modal-close" onclick="closeModal('heroModal')">&times;</button>
       </div>
       <div class="modal-body">
-        <p>此帳號已完全解鎖遊戲內全部 106 位英雄，並擁有全部滿階熟練度與專屬專精勳章。</p>
+        <p>此帳號已完全解鎖遊戲內全部 106 位英雄，並擁有全部滿階戰力與專屬專精勳章。</p>
         <div class="modal-grid" id="heroGridContainer"></div>
       </div>
     </div>
@@ -1012,6 +1030,8 @@
           <div class="pass-item"><span>波可極限威能吊飾</span><span class="pass-level">已解鎖</span></div>
           <div class="pass-item"><span>造型鑰匙儲備</span><span class="pass-level">11 把</span></div>
           <div class="pass-item"><span>資源鑰匙儲備</span><span class="pass-level">2 把</span></div>
+          <div class="pass-item"><span>吊飾鑰匙儲備</span><span class="pass-level">1 把</span></div>
+          <div class="pass-item"><span>通行鑰匙儲備</span><span class="pass-level">1 把</span></div>
         </div>
       </div>
     </div>
@@ -1032,6 +1052,14 @@
         <div class="currency-card">
           <div class="currency-header">✨ 閃耀幣</div>
           <div class="currency-amount">22,072</div>
+        </div>
+        <div class="currency-card">
+          <div class="currency-header">⚡ 戰力能量</div>
+          <div class="currency-amount">8,563</div>
+        </div>
+        <div class="currency-card">
+          <div class="currency-header">💎 綠寶石</div>
+          <div class="currency-amount">180</div>
         </div>
       </div>
     </div>
@@ -1058,6 +1086,115 @@
   <div class="toast-msg" id="toast">已成功複製資訊！</div>
 
   <script>
+    const heroesDataList = [
+      { id: 1, name: "雪莉 (Shelly)", role: "warrior", power: 11, trophies: 1250, mastery: "III" },
+      { id: 2, name: "妮塔 (Nita)", role: "warrior", power: 11, trophies: 1180, mastery: "III" },
+      { id: 3, name: "高爾特 (Colt)", role: "shooter", power: 11, trophies: 1220, mastery: "III" },
+      { id: 4, name: "公牛 (Bull)", role: "tank", power: 11, trophies: 1150, mastery: "III" },
+      { id: 5, name: "潔西 (Jessie)", role: "shooter", power: 11, trophies: 1100, mastery: "III" },
+      { id: 6, name: "布洛克 (Brock)", role: "shooter", power: 11, trophies: 1080, mastery: "III" },
+      { id: 7, name: "爆破麥克 (Dynamike)", role: "mage", power: 11, trophies: 1250, mastery: "III" },
+      { id: 8, name: "阿勃 (Bo)", role: "shooter", power: 11, trophies: 1050, mastery: "III" },
+      { id: 9, name: "滴答 (Tick)", role: "mage", power: 11, trophies: 1120, mastery: "III" },
+      { id: 10, name: "8 位元 (8-Bit)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
+      { id: 11, name: "艾姆絲 (Emz)", role: "mage", power: 11, trophies: 1140, mastery: "III" },
+      { id: 12, name: "普里莫 (El Primo)", role: "tank", power: 11, trophies: 1200, mastery: "III" },
+      { id: 13, name: "波可 (Poco)", role: "support", power: 11, trophies: 1250, mastery: "III" },
+      { id: 14, name: "羅莎 (Rosa)", role: "tank", power: 11, trophies: 1070, mastery: "III" },
+      { id: 15, name: "巴利 (Barley)", role: "mage", power: 11, trophies: 1030, mastery: "III" },
+      { id: 16, name: "理查 (Rico)", role: "shooter", power: 11, trophies: 1190, mastery: "III" },
+      { id: 17, name: "佩妮 (Penny)", role: "shooter", power: 11, trophies: 1040, mastery: "III" },
+      { id: 18, name: "卡爾 (Carl)", role: "warrior", power: 11, trophies: 1060, mastery: "III" },
+      { id: 19, name: "雅琪 (Jacky)", role: "tank", power: 11, trophies: 1080, mastery: "III" },
+      { id: 20, name: "佩佩 (Piper)", role: "shooter", power: 11, trophies: 1250, mastery: "III" },
+      { id: 21, name: "珮姆 (Pam)", role: "support", power: 11, trophies: 1020, mastery: "III" },
+      { id: 22, name: "法蘭克 (Frank)", role: "tank", power: 11, trophies: 1210, mastery: "III" },
+      { id: 23, name: "碧碧 (Bibi)", role: "tank", power: 11, trophies: 1160, mastery: "III" },
+      { id: 24, name: "蜜蜂 (Bea)", role: "shooter", power: 11, trophies: 1100, mastery: "III" },
+      { id: 25, name: "娜妮 (Nani)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
+      { id: 26, name: "艾德加 (Edgar)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 27, name: "葛里夫 (Griff)", role: "shooter", power: 11, trophies: 1050, mastery: "III" },
+      { id: 28, name: "格羅姆 (Grom)", role: "mage", power: 11, trophies: 1070, mastery: "III" },
+      { id: 29, name: "邦妮 (Bonnie)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
+      { id: 30, name: "蓋爾 (Gale)", role: "support", power: 11, trophies: 1120, mastery: "III" },
+      { id: 31, name: "柯萊特 (Colette)", role: "warrior", power: 11, trophies: 1150, mastery: "III" },
+      { id: 32, name: "路 (Lou)", role: "support", power: 11, trophies: 1080, mastery: "III" },
+      { id: 33, name: "拉夫斯 (Ruffs)", role: "support", power: 11, trophies: 1040, mastery: "III" },
+      { id: 34, name: "貝爾 (Belle)", role: "shooter", power: 11, trophies: 1130, mastery: "III" },
+      { id: 35, name: "巴茲 (Buzz)", role: "assassin", power: 11, trophies: 1200, mastery: "III" },
+      { id: 36, name: "方 (Fang)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 37, name: "伊芙 (Eve)", role: "mage", power: 11, trophies: 1060, mastery: "III" },
+      { id: 38, name: "珍妮特 (Janet)", role: "shooter", power: 11, trophies: 1070, mastery: "III" },
+      { id: 39, name: "奧提斯 (Otis)", role: "shooter", power: 11, trophies: 1090, mastery: "III" },
+      { id: 40, name: "薩姆 (Sam)", role: "assassin", power: 11, trophies: 1050, mastery: "III" },
+      { id: 41, name: "巴斯特 (Buster)", role: "tank", power: 11, trophies: 1110, mastery: "III" },
+      { id: 42, name: "曼蒂 (Mandy)", role: "shooter", power: 11, trophies: 1140, mastery: "III" },
+      { id: 43, name: "R-T", role: "shooter", power: 11, trophies: 1080, mastery: "III" },
+      { id: 44, name: "薇洛 (Willow)", role: "mage", power: 11, trophies: 1030, mastery: "III" },
+      { id: 45, name: "漢克 (Hank)", role: "tank", power: 11, trophies: 1020, mastery: "III" },
+      { id: 46, name: "珍珠 (Pearl)", role: "warrior", power: 11, trophies: 1070, mastery: "III" },
+      { id: 47, name: "拉里與勞里 (Larry & Lawrie)", role: "mage", power: 11, trophies: 1220, mastery: "III" },
+      { id: 48, name: "梅洛迪 (Melodie)", role: "assassin", power: 11, trophies: 1200, mastery: "III" },
+      { id: 49, name: "安傑洛 (Angelo)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
+      { id: 50, name: "德拉科 (Draco)", role: "tank", power: 11, trophies: 1210, mastery: "III" },
+      { id: 51, name: "莉莉 (Lily)", role: "assassin", power: 11, trophies: 1190, mastery: "III" },
+      { id: 52, name: "克蘭西 (Clancy)", role: "warrior", power: 11, trophies: 1150, mastery: "III" },
+      { id: 53, name: "貝利 (Berry)", role: "support", power: 11, trophies: 1100, mastery: "III" },
+      { id: 54, name: "莫 (Moe)", role: "mage", power: 11, trophies: 1120, mastery: "III" },
+      { id: 55, name: "健二 (Kenji)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 56, name: "茱茱 (Juju)", role: "mage", power: 11, trophies: 1080, mastery: "III" },
+      { id: 57, name: "謝德 (Shade)", role: "assassin", power: 11, trophies: 1090, mastery: "III" },
+      { id: 58, name: "莫提斯 (Mortis)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 59, name: "塔拉 (Tara)", role: "mage", power: 11, trophies: 1130, mastery: "III" },
+      { id: 60, name: "吉恩 (Gene)", role: "support", power: 11, trophies: 1110, mastery: "III" },
+      { id: 61, name: "麥克斯 (Max)", role: "support", power: 11, trophies: 1170, mastery: "III" },
+      { id: 62, name: "史普勞特 (Sprout)", role: "mage", power: 11, trophies: 1060, mastery: "III" },
+      { id: 63, name: "拜倫 (Byron)", role: "support", power: 11, trophies: 1120, mastery: "III" },
+      { id: 64, name: "史魁克 (Squeak)", role: "mage", power: 11, trophies: 1050, mastery: "III" },
+      { id: 65, name: "盧 we (Lou)", role: "support", power: 11, trophies: 1040, mastery: "III" },
+      { id: 66, name: "查克 (Chuck)", role: "warrior", power: 11, trophies: 1090, mastery: "III" },
+      { id: 67, name: "史派克 (Spike)", role: "shooter", power: 11, trophies: 1250, mastery: "III" },
+      { id: 68, name: "鴉 (Crow)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 69, name: "里昂 (Leon)", role: "assassin", power: 11, trophies: 1250, mastery: "III" },
+      { id: 70, name: "沙迪 (Sandy)", role: "support", power: 11, trophies: 1200, mastery: "III" },
+      { id: 71, name: "琥珀 (Amber)", role: "shooter", power: 11, trophies: 1180, mastery: "III" },
+      { id: 72, name: "梅格 (Meg)", role: "tank", power: 11, trophies: 1150, mastery: "III" },
+      { id: 73, name: "徹斯特 (Chester)", role: "warrior", power: 11, trophies: 1160, mastery: "III" },
+      { id: 74, name: "科迪琉斯 (Cordelius)", role: "assassin", power: 11, trophies: 1220, mastery: "III" },
+      { id: 75, name: "米普 (Mico)", role: "assassin", power: 11, trophies: 1100, mastery: "III" },
+      { id: 76, name: "基特 (Kit)", role: "support", power: 11, trophies: 1230, mastery: "III" },
+      { id: 77, name: "英雄 #77", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
+      { id: 78, name: "英雄 #78", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
+      { id: 79, name: "英雄 #79", role: "tank", power: 11, trophies: 1000, mastery: "III" },
+      { id: 80, name: "英雄 #80", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
+      { id: 81, name: "英雄 #81", role: "support", power: 11, trophies: 1000, mastery: "III" },
+      { id: 82, name: "英雄 #82", role: "mage", power: 11, trophies: 1000, mastery: "III" },
+      { id: 83, name: "英雄 #83", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
+      { id: 84, name: "英雄 #84", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
+      { id: 85, name: "英雄 #85", role: "tank", power: 11, trophies: 1000, mastery: "III" },
+      { id: 86, name: "英雄 #86", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
+      { id: 87, name: "英雄 #87", role: "support", power: 11, trophies: 1000, mastery: "III" },
+      { id: 88, name: "英雄 #88", role: "mage", power: 11, trophies: 1000, mastery: "III" },
+      { id: 89, name: "英雄 #89", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
+      { id: 90, name: "英雄 #90", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
+      { id: 91, name: "英雄 #91", role: "tank", power: 11, trophies: 1000, mastery: "III" },
+      { id: 92, name: "英雄 #92", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
+      { id: 93, name: "英雄 #93", role: "support", power: 11, trophies: 1000, mastery: "III" },
+      { id: 94, name: "英雄 #94", role: "mage", power: 11, trophies: 1000, mastery: "III" },
+      { id: 95, name: "英雄 #95", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
+      { id: 96, name: "英雄 #96", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
+      { id: 97, name: "英雄 #97", role: "tank", power: 11, trophies: 1000, mastery: "III" },
+      { id: 98, name: "英雄 #98", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
+      { id: 99, name: "英雄 #99", role: "support", power: 11, trophies: 1000, mastery: "III" },
+      { id: 100, name: "英雄 #100", role: "mage", power: 11, trophies: 1000, mastery: "III" },
+      { id: 101, name: "英雄 #101", role: "warrior", power: 11, trophies: 1000, mastery: "III" },
+      { id: 102, name: "英雄 #102", role: "shooter", power: 11, trophies: 1000, mastery: "III" },
+      { id: 103, name: "英雄 #103", role: "tank", power: 11, trophies: 1000, mastery: "III" },
+      { id: 104, name: "英雄 #104", role: "assassin", power: 11, trophies: 1000, mastery: "III" },
+      { id: 105, name: "英雄 #105", role: "support", power: 11, trophies: 1000, mastery: "III" },
+      { id: 106, name: "英雄 #106", role: "mage", power: 11, trophies: 1000, mastery: "III" }
+    ];
+
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -1174,7 +1311,7 @@
         if (bar) bar.style.width = '100%';
       }, 400);
 
-      initHeroGrid();
+      initHeroGrid('all');
     });
 
     const cards = document.querySelectorAll('.glass-card');
@@ -1272,6 +1409,7 @@
       const chips = document.querySelectorAll('.chip');
       chips.forEach(c => c.classList.remove('active'));
       event.target.classList.add('active');
+      initHeroGrid(role);
     }
 
     function openModal(modalId) {
@@ -1286,16 +1424,25 @@
       if (modal) modal.classList.remove('active');
     }
 
-    function initHeroGrid() {
+    function initHeroGrid(roleFilter = 'all') {
       const container = document.getElementById('heroGridContainer');
       if (!container) return;
       container.innerHTML = '';
-      for (let i = 1; i <= 106; i++) {
-        const miniCard = document.createElement('div');
-        miniCard.className = 'hero-mini-card';
-        miniCard.innerText = '英雄 #' + i;
-        container.appendChild(miniCard);
-      }
+      
+      const filtered = roleFilter === 'all' 
+        ? heroesDataList 
+        : heroesDataList.filter(h => h.role === roleFilter);
+
+      filtered.forEach(hero => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'hero-item-card';
+        itemCard.innerHTML = `
+          <div class="hero-card-name">${hero.name}</div>
+          <div class="hero-card-role">定位：${hero.role}</div>
+          <div class="hero-card-stat">戰力：Lv.${hero.power} | 盃數：${hero.trophies}</div>
+        `;
+        container.appendChild(itemCard);
+      });
     }
 
     function copyContact(label, val) {
