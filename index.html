@@ -3,8 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cyberpunk Account Showcase</title>
+  <title>Cyberpunk 7-Years Account Showcase</title>
   <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.55);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary-blue: #3b82f6;
+      --primary-purple: #8b5cf6;
+      --primary-pink: #ec4899;
+      --primary-green: #10b981;
+      --primary-amber: #f59e0b;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --glow-blue: rgba(59, 130, 246, 0.4);
+      --glow-purple: rgba(139, 92, 246, 0.4);
+      --glow-pink: rgba(236, 72, 153, 0.4);
+    }
     * {
       margin: 0;
       padding: 0;
@@ -12,15 +27,28 @@
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       user-select: none;
     }
-    body {
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
       background: #030712;
-      color: #f3f4f6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.6);
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 40px 20px;
     }
     #bg-canvas {
@@ -36,60 +64,109 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1280px;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 35px;
     }
     .header-panel {
-      background: rgba(15, 23, 42, 0.55);
+      background: var(--card-bg);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 24px;
-      padding: 30px 40px;
+      border-radius: 28px;
+      padding: 35px 45px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(59, 130, 246, 0.15);
       animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .header-panel::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.03),
+        transparent
+      );
+      transform: rotate(30deg);
+      animation: sweepGlow 8s infinite linear;
     }
     .header-panel h1 {
-      font-size: 2.8rem;
-      font-weight: 800;
+      font-size: 3rem;
+      font-weight: 900;
       background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
-      letter-spacing: 2px;
-      margin-bottom: 8px;
+      text-shadow: 0 0 35px rgba(168, 85, 247, 0.4);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
     }
     .header-panel p {
-      color: #9ca3af;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      letter-spacing: 1.5px;
+    }
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      padding: 10px 22px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+      border-color: #8b5cf6;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
     }
     .grid-layout {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
+      gap: 30px;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .grid-layout {
         grid-template-columns: 1fr;
       }
     }
     .glass-card {
       position: relative;
-      background: rgba(17, 24, 39, 0.45);
+      background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 28px;
+      border: 1px solid var(--card-border);
+      border-radius: 30px;
       padding: 35px;
       overflow: hidden;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
       transform-style: preserve-3d;
       perspective: 1000px;
-      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     }
     .glass-card::before {
@@ -99,7 +176,7 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
       opacity: 0;
       transition: opacity 0.5s ease;
       pointer-events: none;
@@ -109,13 +186,13 @@
     }
     .glass-card:hover {
       transform: translateY(-8px) scale(1.01);
-      border-color: rgba(168, 85, 247, 0.5);
-      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25), 0 0 30px rgba(59, 130, 246, 0.2);
+      border-color: rgba(168, 85, 247, 0.4);
+      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25), 0 0 30px rgba(59, 130, 246, 0.15);
     }
-    .card-1 { border-top: 3px solid #3b82f6; animation-delay: 0.1s; }
-    .card-2 { border-top: 3px solid #10b981; animation-delay: 0.2s; }
-    .card-3 { border-top: 3px solid #f59e0b; animation-delay: 0.3s; }
-    .card-4 { border-top: 3px solid #ec4899; animation-delay: 0.4s; }
+    .card-1 { border-top: 4px solid var(--primary-blue); animation-delay: 0.1s; }
+    .card-2 { border-top: 4px solid var(--primary-green); animation-delay: 0.2s; }
+    .card-3 { border-top: 4px solid var(--primary-amber); animation-delay: 0.3s; }
+    .card-4 { border-top: 4px solid var(--primary-pink); animation-delay: 0.4s; }
 
     .card-header {
       display: flex;
@@ -126,264 +203,409 @@
     .card-title-group {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
     .card-icon-box {
-      width: 50px;
-      height: 50px;
-      border-radius: 16px;
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+      font-size: 1.7rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05);
     }
     .card-title {
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 800;
       color: #ffffff;
       letter-spacing: 1px;
     }
     .card-tag {
-      font-size: 0.8rem;
-      padding: 4px 12px;
+      font-size: 0.82rem;
+      padding: 6px 14px;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #d1d5db;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       letter-spacing: 0.5px;
     }
 
     .hero-counter-box {
       display: flex;
       align-items: baseline;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 15px;
     }
     .hero-number {
-      font-size: 4.2rem;
+      font-size: 4.8rem;
       font-weight: 900;
       line-height: 1;
       background: linear-gradient(180deg, #ffffff 0%, #60a5fa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 15px rgba(96, 165, 250, 0.4));
+      filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.4));
     }
     .hero-unit {
-      font-size: 1.3rem;
-      color: #9ca3af;
+      font-size: 1.35rem;
+      color: var(--text-muted);
       font-weight: 600;
     }
     .progress-bar-container {
       width: 100%;
-      height: 12px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .progress-bar-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
-      border-radius: 6px;
-      transition: width 2s cubic-bezier(0.1, 1, 0.1, 1);
-      box-shadow: 0 0 12px #3b82f6;
+      border-radius: 8px;
+      transition: width 2.2s cubic-bezier(0.1, 1, 0.1, 1);
+      box-shadow: 0 0 15px #3b82f6;
+    }
+    .hero-filter-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .chip.active, .chip:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      color: #ffffff;
     }
     .hero-tags-flex {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
     .hero-badge {
       background: rgba(59, 130, 246, 0.12);
       border: 1px solid rgba(59, 130, 246, 0.3);
       color: #93c5fd;
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 14px;
+      font-size: 0.88rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .pass-container {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 16px;
     }
     .pass-item {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 15px 20px;
+      border-radius: 18px;
+      padding: 16px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
     }
     .pass-item:hover {
       background: rgba(16, 185, 129, 0.08);
       border-color: rgba(16, 185, 129, 0.3);
+      transform: translateX(5px);
     }
     .pass-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
     .pass-status-dot {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 10px #10b981;
+      box-shadow: 0 0 12px #10b981;
       animation: pulseGlow 2s infinite;
     }
     .pass-title {
       font-weight: 600;
       color: #e5e7eb;
+      font-size: 0.98rem;
     }
     .pass-level {
       font-weight: 700;
       color: #34d399;
       background: rgba(16, 185, 129, 0.15);
-      padding: 4px 10px;
-      border-radius: 8px;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
     }
 
     .currency-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 16px;
     }
     .currency-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 20px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       position: relative;
       overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .currency-card:hover {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.3);
     }
     .currency-card::after {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 40px;
-      height: 40px;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+      top: -10px;
+      right: -10px;
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
     }
     .currency-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #9ca3af;
-      font-size: 0.9rem;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 0.92rem;
     }
     .currency-amount {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
       color: #fbbf24;
-      text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+      text-shadow: 0 0 15px rgba(251, 191, 36, 0.35);
     }
 
     .year-display {
       display: flex;
       align-items: center;
-      gap: 25px;
-      margin-bottom: 20px;
+      gap: 28px;
+      margin-bottom: 22px;
     }
     .year-badge-big {
-      width: 90px;
-      height: 90px;
-      border-radius: 24px;
+      width: 95px;
+      height: 95px;
+      border-radius: 28px;
       background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(168, 85, 247, 0.2));
       border: 2px solid rgba(236, 72, 153, 0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 25px rgba(236, 72, 153, 0.3);
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.35);
       animation: floatAnimation 4s ease-in-out infinite;
+      flex-shrink: 0;
     }
     .year-val {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       font-weight: 900;
       color: #f472b6;
       line-height: 1;
     }
     .year-lbl {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: #fbcfe8;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
     }
     .year-details {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
     .year-title {
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-size: 1.35rem;
+      font-weight: 800;
       color: #ffffff;
     }
     .year-sub {
-      color: #9ca3af;
-      font-size: 0.9rem;
-      line-height: 1.4;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
     }
     .timeline-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .timeline-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: #d1d5db;
     }
     .timeline-icon {
       color: #ec4899;
+      font-size: 1.1rem;
     }
 
-    .shimmer-btn {
+    .card-footer-btn {
+      margin-top: 25px;
       width: 100%;
-      padding: 18px;
-      border-radius: 20px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .card-footer-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .bottom-actions {
+      display: flex;
+      gap: 20px;
+    }
+    .shimmer-btn {
+      flex: 1;
+      padding: 20px;
+      border-radius: 22px;
       border: none;
       background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
       background-size: 200% 200%;
       color: #ffffff;
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
       letter-spacing: 2px;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
       transition: all 0.4s ease;
       animation: gradientMove 6s ease infinite;
       position: relative;
       overflow: hidden;
     }
     .shimmer-btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 40px rgba(236, 72, 153, 0.6);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 18px 45px rgba(236, 72, 153, 0.6);
     }
     .shimmer-btn:active {
       transform: translateY(1px) scale(0.98);
     }
 
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(15px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 28px;
+      width: 90%;
+      max-width: 650px;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.3);
+      transform: scale(0.85) translateY(30px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-box {
+      transform: scale(1) translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 15px;
+    }
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .modal-close:hover {
+      color: #ffffff;
+    }
+    .modal-body {
+      color: #d1d5db;
+      font-size: 1rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    .hero-mini-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #e5e7eb;
+    }
+
     @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
+      from { opacity: 0; transform: translateY(-40px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeInUp {
@@ -392,16 +614,20 @@
     }
     @keyframes pulseGlow {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
+      50% { transform: scale(1.35); opacity: 0.5; }
     }
     @keyframes floatAnimation {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
     }
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+    @keyframes sweepGlow {
+      0% { transform: rotate(30deg) translateY(-100%); }
+      100% { transform: rotate(30deg) translateY(100%); }
     }
   </style>
 </head>
@@ -412,128 +638,238 @@
   <div class="app-container">
     <div class="header-panel">
       <h1>7 YEARS ACCOUNT SHOWCASE</h1>
-      <p>極品頂級帳號資產總覽面板</p>
+      <p>極品頂級帳號資產總覽數據庫面板</p>
+      <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('all')">全部總覽</button>
+        <button class="nav-btn" onclick="switchTab('heroes')">英雄數據</button>
+        <button class="nav-btn" onclick="switchTab('pass')">通行證紀錄</button>
+        <button class="nav-btn" onclick="switchTab('treasury')">資產金庫</button>
+        <button class="nav-btn" onclick="switchTab('history')">七年資歷</button>
+      </div>
     </div>
 
     <div class="grid-layout">
       
       <div class="glass-card card-1" id="card-hero">
-        <div class="card-header">
-          <div class="card-title-group">
-            <div class="card-icon-box">⚔️</div>
-            <div class="card-title">區域 1：英雄圖鑑</div>
+        <div>
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon-box">⚔️</div>
+              <div class="card-title">區域 1：英雄圖鑑</div>
+            </div>
+            <div class="card-tag">全英雄解鎖</div>
           </div>
-          <div class="card-tag">全英雄解鎖</div>
+          <div class="hero-counter-box">
+            <span class="hero-number" id="hero-count">0</span>
+            <span class="hero-unit">/ 106 位英雄</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="hero-bar"></div>
+          </div>
+          <div class="hero-filter-chips">
+            <span class="chip active" onclick="filterRole('all')">全部</span>
+            <span class="chip" onclick="filterRole('tank')">坦克</span>
+            <span class="chip" onclick="filterRole('assassin')">刺客</span>
+            <span class="chip" onclick="filterRole('shooter')">射手</span>
+            <span class="chip" onclick="filterRole('mage')">法師</span>
+            <span class="chip" onclick="filterRole('support')">輔助</span>
+            <span class="chip" onclick="filterRole('warrior')">鬥士</span>
+          </div>
+          <div class="hero-tags-flex">
+            <div class="hero-badge"><span>🔥</span> 滿級英雄 106</div>
+            <div class="hero-badge"><span>👑</span> 限定皮膚 88+</div>
+            <div class="hero-badge"><span>⚡</span> 熟練度滿階</div>
+          </div>
         </div>
-        <div class="hero-counter-box">
-          <span class="hero-number" id="hero-count">0</span>
-          <span class="hero-unit">/ 106 位英雄</span>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="hero-bar"></div>
-        </div>
-        <div class="hero-tags-flex">
-          <div class="hero-badge"><span>🔥</span> 滿級英雄數 106</div>
-          <div class="hero-badge"><span>👑</span> 限制極品皮膚 88+</div>
-          <div class="hero-badge"><span>⚡</span> 熟練度全滿</div>
-        </div>
+        <button class="card-footer-btn" onclick="openModal('heroModal')">
+          <span>展開 106 位英雄矩陣清單</span> 🔍
+        </button>
       </div>
 
       <div class="glass-card card-2" id="card-pass">
-        <div class="card-header">
-          <div class="card-title-group">
-            <div class="card-icon-box">🎫</div>
-            <div class="card-title">區域 2：通行證區</div>
+        <div>
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon-box">🎫</div>
+              <div class="card-title">區域 2：通行證區</div>
+            </div>
+            <div class="card-tag">全賽季解鎖</div>
           </div>
-          <div class="card-tag">全賽季解鎖</div>
+          <div class="pass-container">
+            <div class="pass-item">
+              <div class="pass-info">
+                <div class="pass-status-dot"></div>
+                <div class="pass-title">本賽季尊爵通行證 (Pass)</div>
+              </div>
+              <div class="pass-level">MAX LEVEL</div>
+            </div>
+            <div class="pass-item">
+              <div class="pass-info">
+                <div class="pass-status-dot"></div>
+                <div class="pass-title">歷年賽季典藏通行證</div>
+              </div>
+              <div class="pass-level">100% 全收藏</div>
+            </div>
+            <div class="pass-item">
+              <div class="pass-info">
+                <div class="pass-status-dot"></div>
+                <div class="pass-title">專屬限定主題獎勵</div>
+              </div>
+              <div class="pass-level">已完全領取</div>
+            </div>
+            <div class="pass-item">
+              <div class="pass-info">
+                <div class="pass-status-dot"></div>
+                <div class="pass-title">賽季專屬頭像框與稱號</div>
+              </div>
+              <div class="pass-level">全數擁有</div>
+            </div>
+          </div>
         </div>
-        <div class="pass-container">
-          <div class="pass-item">
-            <div class="pass-info">
-              <div class="pass-status-dot"></div>
-              <div class="pass-title">本賽季尊爵通行證 (Pass)</div>
-            </div>
-            <div class="pass-level">MAX LEVEL</div>
-          </div>
-          <div class="pass-item">
-            <div class="pass-info">
-              <div class="pass-status-dot"></div>
-              <div class="pass-title">歷年賽季典藏通行證</div>
-            </div>
-            <div class="pass-level">100% 全收藏</div>
-          </div>
-          <div class="pass-item">
-            <div class="pass-info">
-              <div class="pass-status-dot"></div>
-              <div class="pass-title">專屬限定主題獎勵</div>
-            </div>
-            <div class="pass-level">已完全領取</div>
-          </div>
-        </div>
+        <button class="card-footer-btn" onclick="openModal('passModal')">
+          <span>檢視歷年 Pass 履歷軌道</span> 📜
+        </button>
       </div>
 
       <div class="glass-card card-3" id="card-currency">
-        <div class="card-header">
-          <div class="card-title-group">
-            <div class="card-icon-box">💎</div>
-            <div class="card-title">區域 3：寶石與資產庫</div>
+        <div>
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon-box">💎</div>
+              <div class="card-title">區域 3：寶石與資產庫</div>
+            </div>
+            <div class="card-tag">海量儲備</div>
           </div>
-          <div class="card-tag">海量儲備</div>
+          <div class="currency-grid">
+            <div class="currency-card">
+              <div class="currency-header">💎 璀璨寶石</div>
+              <div class="currency-amount" id="gem-count">0</div>
+            </div>
+            <div class="currency-card">
+              <div class="currency-header">🪙 閃耀金幣</div>
+              <div class="currency-amount" id="coin-count">0</div>
+            </div>
+            <div class="currency-card">
+              <div class="currency-header">⭐ 星光代幣</div>
+              <div class="currency-amount" id="star-count">0</div>
+            </div>
+            <div class="currency-card">
+              <div class="currency-header">🏆 榮譽代幣</div>
+              <div class="currency-amount" id="token-count">0</div>
+            </div>
+          </div>
         </div>
-        <div class="currency-grid">
-          <div class="currency-card">
-            <div class="currency-header">💎 璀璨寶石</div>
-            <div class="currency-amount" id="gem-count">0</div>
-          </div>
-          <div class="currency-card">
-            <div class="currency-header">🪙 閃耀金幣</div>
-            <div class="currency-amount" id="coin-count">0</div>
-          </div>
-          <div class="currency-card">
-            <div class="currency-header">⭐ 星光代幣</div>
-            <div class="currency-amount" id="star-count">0</div>
-          </div>
-          <div class="currency-card">
-            <div class="currency-header">🏆 榮譽代幣</div>
-            <div class="currency-amount" id="token-count">0</div>
-          </div>
-        </div>
+        <button class="card-footer-btn" onclick="openModal('treasuryModal')">
+          <span>開啟資產庫兌換模擬器</span> ⚖️
+        </button>
       </div>
 
       <div class="glass-card card-4" id="card-years">
-        <div class="card-header">
-          <div class="card-title-group">
-            <div class="card-icon-box">⏳</div>
-            <div class="card-title">區域 4：帳號資歷</div>
+        <div>
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-icon-box">⏳</div>
+              <div class="card-title">區域 4：帳號資歷</div>
+            </div>
+            <div class="card-tag">元老級玩家</div>
           </div>
-          <div class="card-tag">元老級玩家</div>
-        </div>
-        <div class="year-display">
-          <div class="year-badge-big">
-            <div class="year-val">7</div>
-            <div class="year-lbl">YEARS</div>
+          <div class="year-display">
+            <div class="year-badge-big">
+              <div class="year-val">7</div>
+              <div class="year-lbl">YEARS</div>
+            </div>
+            <div class="year-details">
+              <div class="year-title">帳號已持續營運 7 年</div>
+              <div class="year-sub">自開服首年即創立，累積無數限量勳章與極稀有戰績歷史紀錄。</div>
+            </div>
           </div>
-          <div class="year-details">
-            <div class="year-title">帳號已持續營運 7 年</div>
-            <div class="year-sub">自開服首年即創立，累積無數限量勳章與極稀有戰績歷史。</div>
+          <div class="timeline-list">
+            <div class="timeline-item"><span class="timeline-icon">✦</span> 創角時間：元老級 7 年老玩家專屬證章</div>
+            <div class="timeline-item"><span class="timeline-icon">✦</span> 絕版標籤：連續 28 賽季最高段位榮譽標章</div>
+            <div class="timeline-item"><span class="timeline-icon">✦</span> 信譽評級：SSS 級頂級零違規榮譽紀錄</div>
           </div>
         </div>
-        <div class="timeline-list">
-          <div class="timeline-item"><span class="timeline-icon">✦</span> 創角時間：元老級 7 年老玩家證章</div>
-          <div class="timeline-item"><span class="timeline-icon">✦</span> 絕版標籤：連續 28 季最高段位標章</div>
-          <div class="timeline-item"><span class="timeline-icon">✦</span> 信譽評級：SSS 級頂級玩家紀錄</div>
-        </div>
+        <button class="card-footer-btn" onclick="openModal('yearsModal')">
+          <span>查看 7 週年時光里程碑</span> 🏛️
+        </button>
       </div>
 
     </div>
 
-    <button class="shimmer-btn" id="interact-btn">觸發動態能量波紋脈衝</button>
+    <div class="bottom-actions">
+      <button class="shimmer-btn" id="interact-btn">觸發高能能量脈衝與超載特效</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="heroModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">區域 1：106 位英雄展示陣列</div>
+        <button class="modal-close" onclick="closeModal('heroModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>此帳號已完全解鎖遊戲內全部 106 位英雄，並擁有全部滿階熟練度與專屬專精勳章。</p>
+        <div class="modal-grid" id="heroGridContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="passModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">區域 2：歷年 Pass 通行證檔案庫</div>
+        <button class="modal-close" onclick="closeModal('passModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>累積 7 年來每個賽季的黃金與尊爵通行證，無一遺漏，全數達到最高滿級狀態。</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="pass-item"><span>Season 1 - 28 尊爵 Pass</span><span class="pass-level">ALL MAX</span></div>
+          <div class="pass-item"><span>賽季專屬造型塗裝</span><span class="pass-level">100% UNLOCKED</span></div>
+          <div class="pass-item"><span>限定動態回城特效</span><span class="pass-level">FULL SET</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="treasuryModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">區域 3：資產庫模擬面板</div>
+        <button class="modal-close" onclick="closeModal('treasuryModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>擁有海量儲備資源，可任意抽滿未來多個賽季的所有限定活動與主題寶箱。</p>
+        <div class="currency-card">
+          <div class="currency-header">💰 帳號總估算價值</div>
+          <div class="currency-amount">TOP 0.01%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="yearsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">區域 4：7 年光輝歷史紀錄</div>
+        <button class="modal-close" onclick="closeModal('yearsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>見證遊戲開服至今的每一個輝煌時刻，榮獲 7 週年紀念稱號與老玩家專屬光環。</p>
+        <div class="timeline-list">
+          <div class="timeline-item"><span class="timeline-icon">📅</span> 創立年份：2019 年元老伺服器</div>
+          <div class="timeline-item"><span class="timeline-icon">🏆</span> 總對局數：超過 15,000+ 場勝場</div>
+          <div class="timeline-item"><span class="timeline-icon">⭐</span> 勝率評級：全服頂尖 68.5% 勝率</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let mouseX = -1000;
+    let mouseY = -1000;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -542,6 +878,11 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
     class Particle {
       constructor() {
         this.reset();
@@ -549,28 +890,41 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.8;
-        this.vy = (Math.random() - 0.5) * 0.8;
-        this.radius = Math.random() * 2 + 1;
-        this.alpha = Math.random() * 0.5 + 0.2;
+        this.vx = (Math.random() - 0.5) * 0.9;
+        this.vy = (Math.random() - 0.5) * 0.9;
+        this.radius = Math.random() * 2.5 + 1;
+        this.alpha = Math.random() * 0.6 + 0.2;
+        this.baseColor = Math.random() > 0.5 ? '#3b82f6' : '#8b5cf6';
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
+
+        const dx = mouseX - this.x;
+        const dy = mouseY - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          const force = (150 - dist) / 150;
+          this.x -= (dx / dist) * force * 3;
+          this.y -= (dy / dist) * force * 3;
+        }
+
         if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
       }
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(147, 197, 253, ${this.alpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#3b82f6';
+        ctx.fillStyle = this.baseColor;
+        ctx.globalAlpha = this.alpha;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.baseColor;
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
     }
 
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 90; i++) {
       particles.push(new Particle());
     }
 
@@ -583,12 +937,12 @@
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 130) {
+          if (dist < 140) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(168, 85, 247, ${0.25 * (1 - dist / 130)})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(139, 92, 246, ${0.28 * (1 - dist / 140)})`;
+            ctx.lineWidth = 0.9;
             ctx.stroke();
           }
         }
@@ -599,11 +953,12 @@
 
     function animateCounter(elementId, target, duration, suffix = '') {
       const elem = document.getElementById(elementId);
+      if (!elem) return;
       let startTime = null;
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const easeOut = 1 - Math.pow(1 - progress, 4);
         const current = Math.floor(easeOut * target);
         elem.innerText = current.toLocaleString() + suffix;
         if (progress < 1) {
@@ -614,15 +969,18 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      animateCounter('hero-count', 106, 2000);
+      animateCounter('hero-count', 106, 2200);
       animateCounter('gem-count', 99999, 2500, '+');
       animateCounter('coin-count', 888888, 2500, '+');
       animateCounter('star-count', 50000, 2200, '+');
       animateCounter('token-count', 12000, 2000, '+');
 
       setTimeout(() => {
-        document.getElementById('hero-bar').style.width = '100%';
-      }, 300);
+        const bar = document.getElementById('hero-bar');
+        if (bar) bar.style.width = '100%';
+      }, 400);
+
+      initHeroGrid();
     });
 
     const cards = document.querySelectorAll('.glass-card');
@@ -631,7 +989,7 @@
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-8px) scale(1.01)`;
+        card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-8px) scale(1.01)`;
       });
       card.addEventListener('mouseleave', () => {
         card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`;
@@ -651,30 +1009,100 @@
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
+        osc.stop(audioCtx.currentTime + 0.25);
       } catch (e) {}
     }
 
-    document.querySelectorAll('.glass-card, .shimmer-btn').forEach(elem => {
-      elem.addEventListener('mouseenter', () => playAudioFeedback(520, 'sine'));
+    document.querySelectorAll('.glass-card, .shimmer-btn, .nav-btn, .card-footer-btn').forEach(elem => {
+      elem.addEventListener('mouseenter', () => playAudioFeedback(480, 'sine'));
     });
 
     document.getElementById('interact-btn').addEventListener('click', () => {
       playAudioFeedback(880, 'triangle');
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 40; i++) {
         particles.push(new Particle());
       }
-      animateCounter('hero-count', 106, 1000);
+      animateCounter('hero-count', 106, 1200);
       animateCounter('gem-count', 99999, 1200, '+');
       animateCounter('coin-count', 888888, 1200, '+');
-      animateCounter('star-count', 50000, 1000, '+');
-      animateCounter('token-count', 12000, 1000, '+');
+      animateCounter('star-count', 50000, 1200, '+');
+      animateCounter('token-count', 12000, 1200, '+');
     });
+
+    function switchTab(tab) {
+      playAudioFeedback(600, 'sine');
+      const btns = document.querySelectorAll('.nav-btn');
+      btns.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const card1 = document.getElementById('card-hero');
+      const card2 = document.getElementById('card-pass');
+      const card3 = document.getElementById('card-currency');
+      const card4 = document.getElementById('card-years');
+
+      if (tab === 'all') {
+        card1.style.display = 'flex';
+        card2.style.display = 'flex';
+        card3.style.display = 'flex';
+        card4.style.display = 'flex';
+      } else if (tab === 'heroes') {
+        card1.style.display = 'flex';
+        card2.style.display = 'none';
+        card3.style.display = 'none';
+        card4.style.display = 'none';
+      } else if (tab === 'pass') {
+        card1.style.display = 'none';
+        card2.style.display = 'flex';
+        card3.style.display = 'none';
+        card4.style.display = 'none';
+      } else if (tab === 'treasury') {
+        card1.style.display = 'none';
+        card2.style.display = 'none';
+        card3.style.display = 'flex';
+        card4.style.display = 'none';
+      } else if (tab === 'history') {
+        card1.style.display = 'none';
+        card2.style.display = 'none';
+        card3.style.display = 'none';
+        card4.style.display = 'flex';
+      }
+    }
+
+    function filterRole(role) {
+      playAudioFeedback(650, 'sine');
+      const chips = document.querySelectorAll('.chip');
+      chips.forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function openModal(modalId) {
+      playAudioFeedback(750, 'square');
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      playAudioFeedback(350, 'sine');
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove('active');
+    }
+
+    function initHeroGrid() {
+      const container = document.getElementById('heroGridContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 1; i <= 106; i++) {
+        const miniCard = document.createElement('div');
+        miniCard.className = 'hero-mini-card';
+        miniCard.innerText = '英雄 #' + i;
+        container.appendChild(miniCard);
+      }
+    }
   </script>
 </body>
 </html>
