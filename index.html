@@ -68,12 +68,49 @@ body {
   100% { transform: scale(1.08); opacity: 1; }
 }
 
+.lang-switch-box {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px;
+  border-radius: 14px;
+  border: 2px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  padding: 6px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+  color: #fff;
+}
+
+.lang-btn.active {
+  background: linear-gradient(180deg, var(--primary-yellow) 0%, var(--secondary-yellow) 100%);
+  color: #000;
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+  border: 1px solid #fff;
+}
+
 .app-container {
   position: relative;
   z-index: 10;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: 70px 20px 30px 20px;
 }
 
 .header-banner {
@@ -474,11 +511,16 @@ body {
 <canvas id="particle-canvas"></canvas>
 <div class="bg-effects"></div>
 
+<div class="lang-switch-box">
+  <button class="lang-btn active" id="lang-tw-btn">繁體中文</button>
+  <button class="lang-btn" id="lang-en-btn">English</button>
+</div>
+
 <div class="app-container">
   
   <header class="header-banner">
-    <h1 class="title-main">BRAWL STARS VIP HUB</h1>
-    <div class="subtitle-tag">109 MAX LEVEL HEROES ACCOUNT</div>
+    <h1 class="title-main" id="ui-title">荒野亂鬥 VIP 資產中心</h1>
+    <div class="subtitle-tag" id="ui-subtitle">109 位全滿等英雄帳號</div>
   </header>
 
   <div class="top-grid">
@@ -486,23 +528,23 @@ body {
     <div class="glass-card">
       <div class="card-header">
         <span>⚡</span>
-        <span>SETTLEMENT ASSET</span>
+        <span id="ui-asset-title">結算資產價值</span>
       </div>
-      <div style="text-align: center; color: #aaa; font-size: 1rem;">FIXED TRANSACTION AMOUNT</div>
+      <div style="text-align: center; color: #aaa; font-size: 1rem;" id="ui-asset-sub">固定交易金額</div>
       <div class="amount-badge">$1500</div>
       
       <div class="stats-container">
         <div class="stat-item">
           <div class="stat-value">109</div>
-          <div class="stat-label">MAX BRAWLERS</div>
+          <div class="stat-label" id="ui-stat-brawlers">滿等英雄數</div>
         </div>
         <div class="stat-item">
           <div class="stat-value">LVL 11</div>
-          <div class="stat-label">HERO GRADE</div>
+          <div class="stat-label" id="ui-stat-grade">英雄等級</div>
         </div>
         <div class="stat-item">
           <div class="stat-value">0</div>
-          <div class="stat-label">HYPERCHARGE</div>
+          <div class="stat-label" id="ui-stat-hyper">極限威能</div>
         </div>
       </div>
     </div>
@@ -510,12 +552,12 @@ body {
     <div class="glass-card">
       <div class="card-header">
         <span>💬</span>
-        <span>DISCORD CONTACT</span>
+        <span id="ui-discord-title">DISCORD 聯繫資訊</span>
       </div>
       <div class="discord-box">
-        <div style="font-size: 1.1rem; color: #bbb;">DIRECT CONTACT TAG</div>
+        <div style="font-size: 1.1rem; color: #bbb;" id="ui-discord-sub">專屬聯絡標籤</div>
         <div class="discord-tag" id="discord-tag-text">tw_.8nkl</div>
-        <button class="brawl-btn" id="copy-btn">COPY DISCORD TAG</button>
+        <button class="brawl-btn" id="copy-btn">複製 DISCORD 標籤</button>
       </div>
     </div>
 
@@ -523,14 +565,14 @@ body {
 
   <div class="glass-card" style="margin-bottom: 40px;">
     <div class="controls-bar">
-      <input type="text" id="search-input" class="search-input" placeholder="Search 109 Brawlers...">
+      <input type="text" id="search-input" class="search-input" placeholder="搜尋 109 位英雄...">
       <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">ALL (109)</button>
-        <button class="filter-btn" data-filter="damage">DAMAGE</button>
-        <button class="filter-btn" data-filter="tank">TANK</button>
-        <button class="filter-btn" data-filter="assassin">ASSASSIN</button>
-        <button class="filter-btn" data-filter="support">SUPPORT</button>
-        <button class="filter-btn" data-filter="marksman">MARKSMAN</button>
+        <button class="filter-btn active" data-filter="all" id="filter-all">全部 (109)</button>
+        <button class="filter-btn" data-filter="damage" id="filter-damage">輸出</button>
+        <button class="filter-btn" data-filter="tank" id="filter-tank">坦克</button>
+        <button class="filter-btn" data-filter="assassin" id="filter-assassin">刺客</button>
+        <button class="filter-btn" data-filter="support" id="filter-support">支援</button>
+        <button class="filter-btn" data-filter="marksman" id="filter-marksman">射手</button>
       </div>
     </div>
 
@@ -539,17 +581,90 @@ body {
 
 </div>
 
-<div class="toast" id="toast-msg">COPIED TO CLIPBOARD!</div>
+<div class="toast" id="toast-msg">已成功複製到剪貼簿！</div>
 
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-content">
-    <div class="modal-title" id="modal-brawler-name">BRAWLER DETAILS</div>
+    <div class="modal-title" id="modal-brawler-name">英雄詳細資訊</div>
     <div class="modal-body" id="modal-brawler-info"></div>
-    <button class="brawl-btn" id="modal-close-btn">CLOSE</button>
+    <button class="brawl-btn" id="modal-close-btn">關閉</button>
   </div>
 </div>
 
 <script>
+let currentLang = 'tw';
+
+const i18n = {
+  tw: {
+    title: "荒野亂鬥 VIP 資產中心",
+    subtitle: "109 位全滿等英雄帳號",
+    assetTitle: "結算資產價值",
+    assetSub: "固定交易金額",
+    statBrawlers: "滿等英雄數",
+    statGrade: "英雄等級",
+    statHyper: "極限威能",
+    discordTitle: "DISCORD 聯繫資訊",
+    discordSub: "專屬聯絡標籤",
+    copyBtn: "複製 DISCORD 標籤",
+    searchPlaceholder: "搜尋 109 位英雄...",
+    copiedToast: "已成功複製到剪貼簿！",
+    closeBtn: "關閉",
+    filterAll: "全部 (109)",
+    filterDamage: "輸出",
+    filterTank: "坦克",
+    filterAssassin: "刺客",
+    filterSupport: "支援",
+    filterMarksman: "射手",
+    modalIdx: "英雄編號：",
+    modalLvl: "目前等級：",
+    modalRole: "職業定位：",
+    modalHyper: "極限威能狀態：",
+    modalHyperVal: "未解鎖 / 無",
+    modalFooter: "已全面準備好進行 $1500 全英雄帳號交易！",
+    categories: {
+      damage: "輸出",
+      tank: "坦克",
+      assassin: "刺客",
+      support: "支援",
+      marksman: "射手"
+    }
+  },
+  en: {
+    title: "BRAWL STARS VIP HUB",
+    subtitle: "109 MAX LEVEL HEROES ACCOUNT",
+    assetTitle: "SETTLEMENT ASSET",
+    assetSub: "FIXED TRANSACTION AMOUNT",
+    statBrawlers: "MAX BRAWLERS",
+    statGrade: "HERO GRADE",
+    statHyper: "HYPERCHARGE",
+    discordTitle: "DISCORD CONTACT",
+    discordSub: "DIRECT CONTACT TAG",
+    copyBtn: "COPY DISCORD TAG",
+    searchPlaceholder: "Search 109 Brawlers...",
+    copiedToast: "COPIED TO CLIPBOARD!",
+    closeBtn: "CLOSE",
+    filterAll: "ALL (109)",
+    filterDamage: "DAMAGE",
+    filterTank: "TANK",
+    filterAssassin: "ASSASSIN",
+    filterSupport: "SUPPORT",
+    filterMarksman: "MARKSMAN",
+    modalIdx: "HERO INDEX:",
+    modalLvl: "CURRENT LEVEL:",
+    modalRole: "CLASS ROLE:",
+    modalHyper: "HYPERCHARGE STATUS:",
+    modalHyperVal: "Locked / None",
+    modalFooter: "Ready for action in the $1500 full roster package!",
+    categories: {
+      damage: "DAMAGE",
+      tank: "TANK",
+      assassin: "ASSASSIN",
+      support: "SUPPORT",
+      marksman: "MARKSMAN"
+    }
+  }
+};
+
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound(type) {
@@ -667,8 +782,7 @@ for (let i = 1; i <= 109; i++) {
     name: name,
     category: category,
     icon: icon,
-    level: 11,
-    status: 'Max Level (No Hypercharge)'
+    level: 11
   });
 }
 
@@ -687,7 +801,7 @@ function renderBrawlers(data) {
         <div class="level-badge">LVL ${item.level}</div>
       </div>
       <div class="brawler-name">${item.name}</div>
-      <div class="brawler-rarity">${item.category.toUpperCase()}</div>
+      <div class="brawler-rarity">${i18n[currentLang].categories[item.category]}</div>
     `;
     
     card.addEventListener('mouseenter', () => playSound('hover'));
@@ -700,9 +814,18 @@ function renderBrawlers(data) {
   });
 }
 
-renderBrawlers(brawlersData);
-
 let currentFilter = 'all';
+
+function filterData() {
+  const query = searchInput.value.toLowerCase().trim();
+  const filtered = brawlersData.filter(item => {
+    const matchesFilter = currentFilter === 'all' || item.category === currentFilter;
+    const matchesSearch = item.name.toLowerCase().includes(query) || item.id.toString().includes(query);
+    return matchesFilter && matchesSearch;
+  });
+  renderBrawlers(filtered);
+}
+
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     playSound('click');
@@ -717,15 +840,54 @@ searchInput.addEventListener('input', () => {
   filterData();
 });
 
-function filterData() {
-  const query = searchInput.value.toLowerCase().trim();
-  const filtered = brawlersData.filter(item => {
-    const matchesFilter = currentFilter === 'all' || item.category === currentFilter;
-    const matchesSearch = item.name.toLowerCase().includes(query) || item.id.toString().includes(query);
-    return matchesFilter && matchesSearch;
-  });
-  renderBrawlers(filtered);
+const langTwBtn = document.getElementById('lang-tw-btn');
+const langEnBtn = document.getElementById('lang-en-btn');
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  const text = i18n[lang];
+
+  document.getElementById('ui-title').innerText = text.title;
+  document.getElementById('ui-subtitle').innerText = text.subtitle;
+  document.getElementById('ui-asset-title').innerText = text.assetTitle;
+  document.getElementById('ui-asset-sub').innerText = text.assetSub;
+  document.getElementById('ui-stat-brawlers').innerText = text.statBrawlers;
+  document.getElementById('ui-stat-grade').innerText = text.statGrade;
+  document.getElementById('ui-stat-hyper').innerText = text.statHyper;
+  document.getElementById('ui-discord-title').innerText = text.discordTitle;
+  document.getElementById('ui-discord-sub').innerText = text.discordSub;
+  document.getElementById('copy-btn').innerText = text.copyBtn;
+  document.getElementById('search-input').placeholder = text.searchPlaceholder;
+  document.getElementById('toast-msg').innerText = text.copiedToast;
+  document.getElementById('modal-close-btn').innerText = text.closeBtn;
+
+  document.getElementById('filter-all').innerText = text.filterAll;
+  document.getElementById('filter-damage').innerText = text.filterDamage;
+  document.getElementById('filter-tank').innerText = text.filterTank;
+  document.getElementById('filter-assassin').innerText = text.filterAssassin;
+  document.getElementById('filter-support').innerText = text.filterSupport;
+  document.getElementById('filter-marksman').innerText = text.filterMarksman;
+
+  if (lang === 'tw') {
+    langTwBtn.classList.add('active');
+    langEnBtn.classList.remove('active');
+  } else {
+    langEnBtn.classList.add('active');
+    langTwBtn.classList.remove('active');
+  }
+
+  filterData();
 }
+
+langTwBtn.addEventListener('click', () => {
+  playSound('click');
+  applyLanguage('tw');
+});
+
+langEnBtn.addEventListener('click', () => {
+  playSound('click');
+  applyLanguage('en');
+});
 
 const copyBtn = document.getElementById('copy-btn');
 const toast = document.getElementById('toast-msg');
@@ -746,13 +908,14 @@ const modalInfo = document.getElementById('modal-brawler-info');
 const modalCloseBtn = document.getElementById('modal-close-btn');
 
 function openModal(brawler) {
+  const text = i18n[currentLang];
   modalTitle.innerText = `${brawler.icon} ${brawler.name}`;
   modalInfo.innerHTML = `
-    <p><strong>HERO INDEX:</strong> #${brawler.id}</p>
-    <p><strong>CURRENT LEVEL:</strong> Level ${brawler.level} (MAX)</p>
-    <p><strong>CLASS ROLE:</strong> ${brawler.category.toUpperCase()}</p>
-    <p><strong>HYPERCHARGE STATUS:</strong> Locked / None</p>
-    <p style="margin-top:15px; color: var(--primary-yellow);">Ready for action in the $1500 full roster package!</p>
+    <p><strong>${text.modalIdx}</strong> #${brawler.id}</p>
+    <p><strong>${text.modalLvl}</strong> Level ${brawler.level} (MAX)</p>
+    <p><strong>${text.modalRole}</strong> ${text.categories[brawler.category]}</p>
+    <p><strong>${text.modalHyper}</strong> ${text.modalHyperVal}</p>
+    <p style="margin-top:15px; color: var(--primary-yellow);">${text.modalFooter}</p>
   `;
   modalOverlay.classList.add('active');
 }
@@ -768,6 +931,8 @@ modalOverlay.addEventListener('click', (e) => {
     modalOverlay.classList.remove('active');
   }
 });
+
+applyLanguage('tw');
 </script>
 </body>
 </html>
